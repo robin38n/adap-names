@@ -7,7 +7,7 @@ export class Name {
     private delimiter: string = this.DEFAULT_DELIMITER;
 
     constructor(other: string[], delimiter?: string) {
-        throw new Error("needs implementation");
+        throw new Error("test1");
     }
 
     public asNameString(delimiter: string = this.delimiter): string {
