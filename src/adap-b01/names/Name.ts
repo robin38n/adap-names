@@ -6,6 +6,7 @@ export class Name {
     private components: string[] = [];
     private delimiter: string = this.DEFAULT_DELIMITER;
 
+    // @method-type Initialization Method (Mutation Method)
     constructor(other: string[], delimiter?: string) {
         this.components = other;
 
@@ -16,6 +17,7 @@ export class Name {
         }
     }
 
+    // @method-type Conversion Method (Query Method)
     public asNameString(delimiter: string = this.delimiter): string {
         
         let str: string = this.components[0] || '';
@@ -25,26 +27,32 @@ export class Name {
         return str;
     }
 
+    // @method-type Get Method (Query Method)
     public getComponent(i: number): string {
         return this.components[i];
     }
 
+    // @method-type Set Method (Mutation Method)
     public setComponent(i: number, c: string): void {
         this.components[i] = c;
     }
 
+    // @method-type Get Method (Query Method)
     public getNoComponents(): number {
         return this.components.length;
     }
 
+    // @method-type Command Method (Mutation Method)
     public insert(i: number, c: string): void {
         this.components.splice(i, 0, c);
     }
 
+    // @method-type Command Method (Mutation Method)
     public append(c: string): void {
         this.components.push(c);
     }
 
+    // @method-type Command Method (Mutation Method)
     public remove(i: number): void {
         this.components.splice(i, 1);
     }
