@@ -20,6 +20,10 @@ export class Name {
     // @method-type Conversion Method (Query Method)
     public asNameString(delimiter: string = this.delimiter): string {
         
+        if (this.components.length == 0){
+            return "";
+        } 
+
         let str: string = this.components[0] || '';
         for (let i = 1; i < this.components.length; i++) {
             str = str.concat(delimiter, this.components[i]);
@@ -29,11 +33,21 @@ export class Name {
 
     // @method-type Get Method (Query Method)
     public getComponent(i: number): string {
+
+        if (i < 0 || i >= this.components.length) {
+            throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length - 1}.`);
+        }
+
         return this.components[i];
     }
 
     // @method-type Set Method (Mutation Method)
     public setComponent(i: number, c: string): void {
+
+        if (i < 0 || i >= this.components.length) {
+            throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length - 1}.`);
+        }
+
         this.components[i] = c;
     }
 
@@ -44,6 +58,11 @@ export class Name {
 
     // @method-type Command Method (Mutation Method)
     public insert(i: number, c: string): void {
+
+        if (i < 0 || i > this.components.length) {
+            throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length}.`);
+        }
+
         this.components.splice(i, 0, c);
     }
 
@@ -54,6 +73,11 @@ export class Name {
 
     // @method-type Command Method (Mutation Method)
     public remove(i: number): void {
+
+        if (i < 0 || i >= this.components.length) {
+            throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length - 1}.`);
+        }
+
         this.components.splice(i, 1);
     }
 
