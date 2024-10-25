@@ -7,35 +7,46 @@ export class Name {
     private delimiter: string = this.DEFAULT_DELIMITER;
 
     constructor(other: string[], delimiter?: string) {
-        throw new Error("test1");
+        this.components = other;
+
+        if (delimiter !== undefined) {
+            this.delimiter = delimiter;
+        } else {
+            this.delimiter = this.DEFAULT_DELIMITER;
+        }
     }
 
     public asNameString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation");
+        
+        let str: string = this.components[0] || '';
+        for (let i = 1; i < this.components.length; i++) {
+            str = str.concat(delimiter, this.components[i]);
+        }
+        return str;
     }
 
     public getComponent(i: number): string {
-        throw new Error("needs implementation");
+        return this.components[i];
     }
 
     public setComponent(i: number, c: string): void {
-        throw new Error("needs implementation");
+        this.components[i] = c;
     }
 
     public getNoComponents(): number {
-        throw new Error("needs implementation");
+        return this.components.length;
     }
 
     public insert(i: number, c: string): void {
-        throw new Error("needs implementation");
+        this.components.splice(i, 0, c);
     }
 
     public append(c: string): void {
-        throw new Error("needs implementation");
+        this.components.push(c);
     }
 
     public remove(i: number): void {
-        throw new Error("needs implementation");
+        this.components.splice(i, 1);
     }
 
 }
