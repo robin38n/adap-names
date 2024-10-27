@@ -6,7 +6,7 @@ export class Name {
     private components: string[] = [];
     private delimiter: string = this.DEFAULT_DELIMITER;
 
-    // @method-type Initialization Method (Mutation Method)
+    // @method-type Initialization Method
     constructor(other: string[], delimiter?: string) {
         this.components = other;
 
@@ -17,7 +17,8 @@ export class Name {
         }
     }
 
-    // @method-type Conversion Method (Query Method)
+    // @method-type Conversion Method
+    /** Returns human-readable representation of Name instance */
     public asNameString(delimiter: string = this.delimiter): string {
         
         if (this.components.length == 0){
@@ -31,7 +32,7 @@ export class Name {
         return str;
     }
 
-    // @method-type Get Method (Query Method)
+    // @method-type Get Method
     public getComponent(i: number): string {
 
         if (i < 0 || i >= this.components.length) {
@@ -41,7 +42,7 @@ export class Name {
         return this.components[i];
     }
 
-    // @method-type Set Method (Mutation Method)
+    // @method-type Set Method
     public setComponent(i: number, c: string): void {
 
         if (i < 0 || i >= this.components.length) {
@@ -51,12 +52,14 @@ export class Name {
         this.components[i] = c;
     }
 
-    // @method-type Get Method (Query Method)
+    // @method-type Get Method
+    /** Returns number of components in Name instance */
     public getNoComponents(): number {
         return this.components.length;
     }
+     
 
-    // @method-type Command Method (Mutation Method)
+    // @method-type Command Method
     public insert(i: number, c: string): void {
 
         if (i < 0 || i > this.components.length) {
@@ -66,12 +69,12 @@ export class Name {
         this.components.splice(i, 0, c);
     }
 
-    // @method-type Command Method (Mutation Method)
+    // @method-type Command Method
     public append(c: string): void {
         this.components.push(c);
     }
 
-    // @method-type Command Method (Mutation Method)
+    // @method-type Command Method
     public remove(i: number): void {
 
         if (i < 0 || i >= this.components.length) {
