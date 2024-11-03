@@ -57,3 +57,13 @@ describe("Escape character extravaganza", () => {
     expect(n.asString()).toBe("oss.cs.fau.de#people");
   });
 });
+
+describe("AsString tests", () => {
+  it("test masked delimiter in StringName and StringArrayName", () => {
+    
+    let sn: Name = new StringName("cs.fau\\.ma\\sk.de\\", '.');
+    let san: Name = new StringArrayName(["cs", "fau.ma\\sk", "de\\"], '.'); 
+    
+    expect(sn.asString(sn.getDelimiterCharacter())).toBe(san.asString(san.getDelimiterCharacter()));
+  });
+});
