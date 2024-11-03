@@ -8,7 +8,13 @@ export class StringName implements Name {
     protected length: number = 0;
 
     constructor(other: string, delimiter?: string) {
-        throw new Error("needs implementation");
+        if (delimiter){
+            this.delimiter = delimiter
+        } else {
+            this.delimiter = DEFAULT_DELIMITER;
+        }
+        this.name = other;
+        this.length = other.length;
     }
 
     public asString(delimiter: string = this.delimiter): string {
@@ -20,39 +26,74 @@ export class StringName implements Name {
     }
 
     public isEmpty(): boolean {
-        throw new Error("needs implementation");
+        return (this.name == "" ? true: false);
     }
 
     public getDelimiterCharacter(): string {
-        throw new Error("needs implementation");
+        return this.delimiter;
     }
 
     public getNoComponents(): number {
-        throw new Error("needs implementation");
+        return this.name.split(this.delimiter).length;
     }
 
     public getComponent(x: number): string {
-        throw new Error("needs implementation");
+        if (x < 0 || x >= this.getNoComponents()) {
+            throw new RangeError(`Index ${x} is out of bounds. Must be between 0 and ${this.getNoComponents() - 1}.`);
+        }
+        return this.name.split(this.delimiter)[x]
     }
 
     public setComponent(n: number, c: string): void {
-        throw new Error("needs implementation");
+        if (n < 0 || n >= this.getNoComponents()) {
+            throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents() - 1}.`);
+        }
+        const components = this.name.split(this.delimiter);
+        components[n] = c;
+        this.name = components.join(this.delimiter);
+        this.length += c.length + 1;
     }
 
     public insert(n: number, c: string): void {
-        throw new Error("needs implementation");
+        if (n < 0 || n > this.getNoComponents()) {
+            throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents()}.`);
+        }
+        const components = this.name.split(this.delimiter);
+        components.splice(n, 0, c);
+        this.name = components.join(this.delimiter);
+        this.length += c.length + 1;
     }
 
     public append(c: string): void {
-        throw new Error("needs implementation");
+        const components = this.name.split(this.delimiter);
+        components.push(c);
+        this.name = components.join(this.delimiter);
+        this.length += c.length + 1;
     }
 
     public remove(n: number): void {
-        throw new Error("needs implementation");
+        if (n < 0 || n >= this.getNoComponents()) {
+            throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents() - 1}.`);
+        }
+        const components = this.name.split(this.delimiter);
+        const len = components[n].length
+        components.splice(n, 1);
+        this.name = components.join(this.delimiter);
+        this.length -=  + 1;
     }
 
     public concat(other: Name): void {
-        throw new Error("needs implementation");
+        if (other.getDelimiterCharacter() !== this.delimiter) {
+            throw new Error("Delimiters do not match.");
+        }
+    
+        const components = this.name.split(this.delimiter);
+        for (let i = 0; i < other.getNoComponents(); i++) {
+            components.push(other.getComponent(i));
+            this.length += other.getComponent(i).length;
+        }
+    
+        this.name = components.join(this.delimiter);
     }
 
 }
