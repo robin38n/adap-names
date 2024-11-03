@@ -8,13 +8,17 @@ export class StringName implements Name {
     protected length: number = 0;
 
     constructor(other: string, delimiter?: string) {
+        if (other.length === 0){
+            throw new Error("Empty String not allowed.");
+        }
+
         if (delimiter){
             this.delimiter = delimiter
         } else {
             this.delimiter = DEFAULT_DELIMITER;
         }
         this.name = other;
-        this.length = other.length;
+        this.length = other.split(this.delimiter).length;
     }
 
     public asString(delimiter: string = this.delimiter): string {
@@ -60,7 +64,6 @@ export class StringName implements Name {
         const components = this.name.split(this.delimiter);
         components[n] = c;
         this.name = components.join(this.delimiter);
-        this.length += c.length + 1;
     }
 
     public insert(n: number, c: string): void {
@@ -70,14 +73,14 @@ export class StringName implements Name {
         const components = this.name.split(this.delimiter);
         components.splice(n, 0, c);
         this.name = components.join(this.delimiter);
-        this.length += c.length + 1;
+        this.length ++;
     }
 
     public append(c: string): void {
         const components = this.name.split(this.delimiter);
         components.push(c);
         this.name = components.join(this.delimiter);
-        this.length += c.length + 1;
+        this.length ++;
     }
 
     public remove(n: number): void {
@@ -88,7 +91,7 @@ export class StringName implements Name {
         const len = components[n].length
         components.splice(n, 1);
         this.name = components.join(this.delimiter);
-        this.length -=  + 1;
+        this.length --;
     }
 
     public concat(other: Name): void {
@@ -99,7 +102,7 @@ export class StringName implements Name {
         const components = this.name.split(this.delimiter);
         for (let i = 0; i < other.getNoComponents(); i++) {
             components.push(other.getComponent(i));
-            this.length += other.getComponent(i).length;
+            this.length ++;
         }
     
         this.name = components.join(this.delimiter);

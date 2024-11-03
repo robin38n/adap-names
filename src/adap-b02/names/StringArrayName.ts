@@ -6,6 +6,10 @@ export class StringArrayName implements Name {
     protected delimiter: string = DEFAULT_DELIMITER;
 
     constructor(other: string[], delimiter?: string) {
+        if (other.length === 0){
+            throw new Error("Empty Array not allowed.");
+        }
+
         this.components = other;
 
         if (delimiter !== undefined) {
@@ -44,7 +48,13 @@ export class StringArrayName implements Name {
     }
 
     public isEmpty(): boolean {
-        return (this.components.length === 0 ? true: false);
+        if (this.components.length === 0){
+            return true;
+        } else if (this.components.length === 1 && this.components[0] == ""){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public getDelimiterCharacter(): string {
@@ -88,7 +98,6 @@ export class StringArrayName implements Name {
     }
 
     public concat(other: Name): void {
-        // Check if delimiters match
         if (other.getDelimiterCharacter() !== this.delimiter) {
             throw new Error("Delimiters do not match.");
         }
