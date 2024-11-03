@@ -48,9 +48,7 @@ export class StringArrayName implements Name {
     }
 
     public isEmpty(): boolean {
-        if (this.components.length === 0){
-            return true;
-        } else if (this.components.length === 1 && this.components[0] == ""){
+        if (this.components.length === 0 || (this.components.length === 1 && this.components[0] == "")){
             return true;
         } else {
             return false;

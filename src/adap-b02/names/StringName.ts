@@ -35,7 +35,17 @@ export class StringName implements Name {
     }
 
     public asDataString(): string {
-        throw new Error("needs implementation");
+        const delimiter = this.getDelimiterCharacter();
+        let str = "";
+        for (let i = 0; i < this.name.length; i++) {
+            if (this.name[i] === ESCAPE_CHARACTER && (this.name[i+1] === undefined || this.name[i+1] != delimiter)) {
+                str += ESCAPE_CHARACTER + this.name[i];
+            } else {
+                str += this.name[i];
+            }
+        }
+
+        return str;
     }
 
     public isEmpty(): boolean {
