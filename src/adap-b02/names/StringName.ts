@@ -18,7 +18,16 @@ export class StringName implements Name {
     }
 
     public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation");
+        let escapedName = "";
+        for (let i = 0; i < this.name.length; i++) {
+            if (this.name[i] === ESCAPE_CHARACTER && (this.name[i+1] === undefined || this.name[i+1] != delimiter)) {
+                escapedName += ESCAPE_CHARACTER + this.name[i];
+            } else {
+                escapedName += this.name[i];
+            }
+        }
+
+        return escapedName;
     }
 
     public asDataString(): string {
