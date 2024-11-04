@@ -32,8 +32,6 @@ export class StringArrayName implements Name {
             for (let j = 0; j < component.length; j++) {
                 if (component[j] === ESCAPE_CHARACTER) {
                     escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
-                } else if (component[j] === delimiter) {
-                    escapedComponent += ESCAPE_CHARACTER + delimiter;
                 } else {
                     escapedComponent += component[j];
                 }
@@ -44,7 +42,27 @@ export class StringArrayName implements Name {
     }
 
     public asDataString(): string {
-        throw new Error("needs implementation");
+        if (this.components.length === 0){
+            return "";
+        }
+        const delimiter = this.getDelimiterCharacter();
+        let str: string = "";
+        for (let i = 0; i < this.components.length; i++) {
+            let component = this.components[i];
+            let escapedComponent = "";
+            // Assumption: all Delimiters within one component correctly masked
+            for (let j = 0; j < component.length; j++) {
+                if (component[j] === ESCAPE_CHARACTER) {
+                    escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
+                } else if (component[j] === delimiter) {
+                    escapedComponent += ESCAPE_CHARACTER + delimiter;
+                } else {
+                    escapedComponent += component[j];
+                }
+            }
+            str += (i === 0 ? "" : delimiter) + escapedComponent;
+        }
+        return str;
     }
 
     public isEmpty(): boolean {
@@ -74,6 +92,11 @@ export class StringArrayName implements Name {
         if (i < 0 || i >= this.components.length) {
             throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length - 1}.`);
         }
+        for (let j = 0; j < c.length; j++) {
+            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
+                throw new Error("Invalid Input");
+            }
+        }
         this.components[i] = c;
     }
 
@@ -81,10 +104,20 @@ export class StringArrayName implements Name {
         if (i < 0 || i > this.components.length) {
             throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length}.`);
         }
+        for (let j = 0; j < c.length; j++) {
+            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
+                throw new Error("Invalid Input");
+            }
+        }
         this.components.splice(i, 0, c);
     }
 
     public append(c: string): void {
+        for (let j = 0; j < c.length; j++) {
+            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
+                throw new Error("Invalid Input");
+            }
+        }
         this.components.push(c);
     }
 
