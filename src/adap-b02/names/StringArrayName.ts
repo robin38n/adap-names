@@ -87,8 +87,8 @@ export class StringArrayName implements Name {
         if (i < 0 || i >= this.components.length) {
             throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length - 1}.`);
         }
-        if (!this.checkInput(c)) throw new Error(`Invalid Input`);
-        
+        if (!this.isValidInput(c)) throw new Error(`Invalid Input`);
+
         this.components[i] = c;
     }
 
@@ -96,13 +96,13 @@ export class StringArrayName implements Name {
         if (i < 0 || i > this.components.length) {
             throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length}.`);
         }
-        if (!this.checkInput(c)) throw new Error(`Invalid Input`);
+        if (!this.isValidInput(c)) throw new Error(`Invalid Input`);
 
         this.components.splice(i, 0, c);
     }
 
     public append(c: string): void {
-        if (!this.checkInput(c)) throw new Error(`Invalid Input`);
+        if (!this.isValidInput(c)) throw new Error(`Invalid Input`);
 
         this.components.push(c);
     }
@@ -124,7 +124,7 @@ export class StringArrayName implements Name {
         }
     }
 
-    public checkInput(c: string): boolean {
+    public isValidInput(c: string): boolean {
         let isEscaped = false;
         for (let j = 0; j < c.length; j++) {
             if (c[j] === ESCAPE_CHARACTER) {

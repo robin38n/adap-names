@@ -90,7 +90,7 @@ export class StringName implements Name {
         if (n < 0 || n >= this.getNoComponents()) {
             throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents() - 1}.`);
         }
-        if (!this.checkInput(c)) throw new Error(`Invalid Input`);
+        if (!this.isValidInput(c)) throw new Error(`Invalid Input`);
 
         const components = this.name.split(this.delimiter);
         components[n] = c;
@@ -101,7 +101,7 @@ export class StringName implements Name {
         if (n < 0 || n > this.getNoComponents()) {
             throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents()}.`);
         }
-        if (!this.checkInput(c)) throw new Error(`Invalid Input`);
+        if (!this.isValidInput(c)) throw new Error(`Invalid Input`);
 
         const components = this.name.split(this.delimiter);
         components.splice(n, 0, c);
@@ -110,7 +110,7 @@ export class StringName implements Name {
     }
 
     public append(c: string): void {
-        if (!this.checkInput(c)) throw new Error(`Invalid Input`);
+        if (!this.isValidInput(c)) throw new Error(`Invalid Input`);
 
         const components = this.name.split(this.delimiter);
         components.push(c);
@@ -142,7 +142,7 @@ export class StringName implements Name {
         this.name = components.join(this.delimiter);
     }
 
-    public checkInput(c: string): boolean {
+    public isValidInput(c: string): boolean {
         let isEscaped = false;
         for (let j = 0; j < c.length; j++) {
             if (c[j] === ESCAPE_CHARACTER) {
