@@ -131,7 +131,7 @@ export class StringArrayName implements Name {
                 isEscaped = !isEscaped;
             } else {
                 if (c[j] === this.delimiter) {
-                    // Der Delimiter ist nur gültig, wenn `isEscaped` true ist
+                    // Der Delimiter ist nur gültig, wenn isEscaped true ist
                     if (!isEscaped) {
                         return false;
                     }
