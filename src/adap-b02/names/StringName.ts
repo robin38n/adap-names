@@ -21,7 +21,7 @@ export class StringName implements Name {
         this.length = 1; 
 
         for (let i = 0; i < other.length; i++) {
-            if (other[i] === ESCAPE_CHARACTER && i + 1 < other.length && other[i + 1] === this.delimiter) {
+            if (other[i] === ESCAPE_CHARACTER && (i + 1 < other.length && other[i + 1] === this.delimiter) && (i != 0 && other[i - 1] !== ESCAPE_CHARACTER)) {
                 i++; 
             } else if (other[i] === this.delimiter) {
                 this.length++;
@@ -65,7 +65,7 @@ export class StringName implements Name {
     }
 
     public getNoComponents(): number {
-        return this.name.split(this.delimiter).length;
+        return this.length;
     }
 
     public getComponent(x: number): string {
@@ -79,6 +79,11 @@ export class StringName implements Name {
         if (n < 0 || n >= this.getNoComponents()) {
             throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents() - 1}.`);
         }
+        for (let j = 0; j < c.length; j++) {
+            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
+                throw new Error("Invalid Input");
+            }
+        }
         const components = this.name.split(this.delimiter);
         components[n] = c;
         this.name = components.join(this.delimiter);
@@ -88,6 +93,11 @@ export class StringName implements Name {
         if (n < 0 || n > this.getNoComponents()) {
             throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents()}.`);
         }
+        for (let j = 0; j < c.length; j++) {
+            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
+                throw new Error("Invalid Input");
+            }
+        }
         const components = this.name.split(this.delimiter);
         components.splice(n, 0, c);
         this.name = components.join(this.delimiter);
@@ -95,6 +105,11 @@ export class StringName implements Name {
     }
 
     public append(c: string): void {
+        for (let j = 0; j < c.length; j++) {
+            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
+                throw new Error("Invalid Input");
+            }
+        }
         const components = this.name.split(this.delimiter);
         components.push(c);
         this.name = components.join(this.delimiter);
