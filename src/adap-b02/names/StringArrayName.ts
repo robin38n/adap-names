@@ -11,11 +11,9 @@ export class StringArrayName implements Name {
         }
         for (let i = 0; i < other.length; i++) {
             for (let j = 0; j < other[i].length; j++) {
-                if (other[i][j] == this.delimiter && (other[i][j-1] != ESCAPE_CHARACTER || other[i][j-1] === undefined)) {
-                    throw new Error(`Invalid Input at component no ${i}.`);
-                }
-                if (other[i][j] == this.delimiter && other[i][j-1] === ESCAPE_CHARACTER && other[i][j-2] === ESCAPE_CHARACTER) {
-                    throw new Error(`Invalid Input at component no ${i}.`);
+                if (other[i][j] == this.delimiter && 
+                    (other[i][j-1] != ESCAPE_CHARACTER || (other[i][j-1] === ESCAPE_CHARACTER && other[i][j-2] === ESCAPE_CHARACTER))){
+                        throw new Error(`Invalid Input at component no ${i}.`);
                 }
             }
         }
@@ -39,7 +37,7 @@ export class StringArrayName implements Name {
             let escapedComponent = "";
 
             for (let j = 0; j < component.length; j++) {
-                if (component[j] === ESCAPE_CHARACTER && (component[j+1] === undefined || component[j+1] != delimiter)) {
+                if (component[j] === ESCAPE_CHARACTER && component[j+1] != delimiter) {
                     escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
                 } else {
                     escapedComponent += component[j];
@@ -61,7 +59,7 @@ export class StringArrayName implements Name {
             let escapedComponent = "";
             
             for (let j = 0; j < component.length; j++) {
-                if (component[j] === ESCAPE_CHARACTER && (component[j+1] === undefined || component[j+1] != delimiter)) {
+                if (component[j] === ESCAPE_CHARACTER && component[j+1] != delimiter) {
                     escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
                 } else {
                     escapedComponent += component[j];
@@ -100,8 +98,9 @@ export class StringArrayName implements Name {
             throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length - 1}.`);
         }
         for (let j = 0; j < c.length; j++) {
-            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
-                throw new Error("Invalid Input");
+            if (c[j] == this.delimiter && 
+                (c[j-1] != ESCAPE_CHARACTER || (c[j-1] === ESCAPE_CHARACTER && c[j-2] === ESCAPE_CHARACTER))){
+                    throw new Error(`Invalid Input`);
             }
         }
         this.components[i] = c;
@@ -112,8 +111,9 @@ export class StringArrayName implements Name {
             throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length}.`);
         }
         for (let j = 0; j < c.length; j++) {
-            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
-                throw new Error("Invalid Input");
+            if (c[j] == this.delimiter && 
+                (c[j-1] != ESCAPE_CHARACTER || (c[j-1] === ESCAPE_CHARACTER && c[j-2] === ESCAPE_CHARACTER))){
+                    throw new Error(`Invalid Input`);
             }
         }
         this.components.splice(i, 0, c);
@@ -121,8 +121,9 @@ export class StringArrayName implements Name {
 
     public append(c: string): void {
         for (let j = 0; j < c.length; j++) {
-            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
-                throw new Error("Invalid Input");
+            if (c[j] == this.delimiter && 
+                (c[j-1] != ESCAPE_CHARACTER || (c[j-1] === ESCAPE_CHARACTER && c[j-2] === ESCAPE_CHARACTER))){
+                    throw new Error(`Invalid Input`);
             }
         }
         this.components.push(c);
