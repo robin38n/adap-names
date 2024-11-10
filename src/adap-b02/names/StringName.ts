@@ -20,33 +20,44 @@ export class StringName implements Name {
         this.name = other;
         this.length = 1; 
 
+        let isEscaped = false;
         for (let i = 0; i < other.length; i++) {
-            if (other[i] === ESCAPE_CHARACTER && (i + 1 < other.length && other[i + 1] === this.delimiter) && (i != 0 && other[i - 1] !== ESCAPE_CHARACTER)) {
-                i++; 
-            } else if (other[i] === this.delimiter) {
-                this.length++;
+            if (other[i] === ESCAPE_CHARACTER) {
+                isEscaped = !isEscaped;
+            } else {
+                if (other[i] === this.delimiter) {
+                    if (!isEscaped) {
+                        this.length ++;
+                    }
+                }
+                isEscaped = false;
             }
         }
+        
     }
 
     public asString(delimiter: string = this.delimiter): string {
-        let escapedName = "";
+        let str = this.name;
+        let isEscaped = false;
         for (let i = 0; i < this.name.length; i++) {
-            if (this.name[i] === ESCAPE_CHARACTER && (this.name[i+1] === undefined || this.name[i+1] != delimiter)) {
-                escapedName += ESCAPE_CHARACTER + this.name[i];
+            if (this.name[i] === ESCAPE_CHARACTER) {
+                isEscaped = !isEscaped;
             } else {
-                escapedName += this.name[i];
+                if (this.name[i] === this.getDelimiterCharacter()) {
+                    if (!isEscaped) {
+                        str = str.slice(0, i) + delimiter + str.slice(i+1);
+                    }
+                }
+                isEscaped = false;
             }
         }
-
-        return escapedName;
+        return str;
     }
 
     public asDataString(): string {
-        const delimiter = this.getDelimiterCharacter();
         let str = "";
         for (let i = 0; i < this.name.length; i++) {
-            if (this.name[i] === ESCAPE_CHARACTER  && (this.name[i+1] === undefined || this.name[i+1] != delimiter)) {
+            if (this.name[i] === ESCAPE_CHARACTER  && this.name[i+1] != this.delimiter) {
                 str += ESCAPE_CHARACTER + this.name[i];
             } else {
                 str += this.name[i];
@@ -79,12 +90,8 @@ export class StringName implements Name {
         if (n < 0 || n >= this.getNoComponents()) {
             throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents() - 1}.`);
         }
-        for (let j = 0; j < c.length; j++) {
-            if (c[j] == this.delimiter && 
-                (c[j-1] != ESCAPE_CHARACTER || (c[j-1] === ESCAPE_CHARACTER && c[j-2] === ESCAPE_CHARACTER))){
-                    throw new Error(`Invalid Input`);
-            }
-        }
+        if (!this.checkInput(c)) throw new Error(`Invalid Input`);
+
         const components = this.name.split(this.delimiter);
         components[n] = c;
         this.name = components.join(this.delimiter);
@@ -94,12 +101,8 @@ export class StringName implements Name {
         if (n < 0 || n > this.getNoComponents()) {
             throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents()}.`);
         }
-        for (let j = 0; j < c.length; j++) {
-            if (c[j] == this.delimiter && 
-                (c[j-1] != ESCAPE_CHARACTER || (c[j-1] === ESCAPE_CHARACTER && c[j-2] === ESCAPE_CHARACTER))){
-                    throw new Error(`Invalid Input`);
-            }
-        }
+        if (!this.checkInput(c)) throw new Error(`Invalid Input`);
+
         const components = this.name.split(this.delimiter);
         components.splice(n, 0, c);
         this.name = components.join(this.delimiter);
@@ -107,12 +110,8 @@ export class StringName implements Name {
     }
 
     public append(c: string): void {
-        for (let j = 0; j < c.length; j++) {
-            if (c[j] == this.delimiter && 
-                (c[j-1] != ESCAPE_CHARACTER || (c[j-1] === ESCAPE_CHARACTER && c[j-2] === ESCAPE_CHARACTER))){
-                    throw new Error(`Invalid Input`);
-            }
-        }
+        if (!this.checkInput(c)) throw new Error(`Invalid Input`);
+
         const components = this.name.split(this.delimiter);
         components.push(c);
         this.name = components.join(this.delimiter);
@@ -134,14 +133,31 @@ export class StringName implements Name {
         if (other.getDelimiterCharacter() !== this.delimiter) {
             throw new Error("Delimiters do not match.");
         }
+        this.length += other.getNoComponents();
     
         const components = this.name.split(this.delimiter);
         for (let i = 0; i < other.getNoComponents(); i++) {
             components.push(other.getComponent(i));
-            this.length ++;
         }
-    
         this.name = components.join(this.delimiter);
+    }
+
+    public checkInput(c: string): boolean {
+        let isEscaped = false;
+        for (let j = 0; j < c.length; j++) {
+            if (c[j] === ESCAPE_CHARACTER) {
+                isEscaped = !isEscaped;
+            } else {
+                if (c[j] === this.delimiter) {
+                    // Der Delimiter ist nur gültig, wenn `isEscaped` true ist
+                    if (!isEscaped) {
+                        return false;
+                    }
+                }
+            isEscaped = false; // Reset für den nächsten Char
+            }
+        }
+        return true;
     }
 
 }
