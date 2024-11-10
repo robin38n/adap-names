@@ -30,7 +30,7 @@ export class StringArrayName implements Name {
             let escapedComponent = "";
 
             for (let j = 0; j < component.length; j++) {
-                if (component[j] === ESCAPE_CHARACTER) {
+                if (component[j] === ESCAPE_CHARACTER && (component[j+1] === undefined || component[j+1] != delimiter)) {
                     escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
                 } else {
                     escapedComponent += component[j];
@@ -50,12 +50,14 @@ export class StringArrayName implements Name {
         for (let i = 0; i < this.components.length; i++) {
             let component = this.components[i];
             let escapedComponent = "";
-            // Assumption: all Delimiters within one component correctly masked
+            
             for (let j = 0; j < component.length; j++) {
-                if (component[j] === ESCAPE_CHARACTER) {
+                if (component[j] === ESCAPE_CHARACTER && (component[j+1] === undefined || component[j+1] != delimiter)) {
                     escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
+                /*
                 } else if (component[j] === delimiter) {
                     escapedComponent += ESCAPE_CHARACTER + delimiter;
+                */
                 } else {
                     escapedComponent += component[j];
                 }

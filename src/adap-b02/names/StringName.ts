@@ -18,7 +18,15 @@ export class StringName implements Name {
             this.delimiter = DEFAULT_DELIMITER;
         }
         this.name = other;
-        this.length = other.split(this.delimiter).length;
+        this.length = 1; 
+
+        for (let i = 0; i < other.length; i++) {
+            if (other[i] === ESCAPE_CHARACTER && i + 1 < other.length && other[i + 1] === this.delimiter) {
+                i++; 
+            } else if (other[i] === this.delimiter) {
+                this.length++;
+            }
+        }
     }
 
     public asString(delimiter: string = this.delimiter): string {
@@ -38,7 +46,7 @@ export class StringName implements Name {
         const delimiter = this.getDelimiterCharacter();
         let str = "";
         for (let i = 0; i < this.name.length; i++) {
-            if (this.name[i] === ESCAPE_CHARACTER && (this.name[i+1] === undefined || this.name[i+1] != delimiter)) {
+            if (this.name[i] === ESCAPE_CHARACTER  && (this.name[i+1] === undefined || this.name[i+1] != delimiter)) {
                 str += ESCAPE_CHARACTER + this.name[i];
             } else {
                 str += this.name[i];
