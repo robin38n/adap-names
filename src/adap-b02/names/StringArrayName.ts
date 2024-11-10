@@ -9,7 +9,16 @@ export class StringArrayName implements Name {
         if (other.length === 0){
             throw new Error("Empty Array not allowed.");
         }
-
+        for (let i = 0; i < other.length; i++) {
+            for (let j = 0; j < other[i].length; j++) {
+                if (other[i][j] == this.delimiter && (other[i][j-1] != ESCAPE_CHARACTER || other[i][j-1] === undefined)) {
+                    throw new Error(`Invalid Input at component no ${i}.`);
+                }
+                if (other[i][j] == this.delimiter && other[i][j-1] === ESCAPE_CHARACTER && other[i][j-2] === ESCAPE_CHARACTER) {
+                    throw new Error(`Invalid Input at component no ${i}.`);
+                }
+            }
+        }
         this.components = other;
 
         if (delimiter !== undefined) {
@@ -54,10 +63,6 @@ export class StringArrayName implements Name {
             for (let j = 0; j < component.length; j++) {
                 if (component[j] === ESCAPE_CHARACTER && (component[j+1] === undefined || component[j+1] != delimiter)) {
                     escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
-                /*
-                } else if (component[j] === delimiter) {
-                    escapedComponent += ESCAPE_CHARACTER + delimiter;
-                */
                 } else {
                     escapedComponent += component[j];
                 }

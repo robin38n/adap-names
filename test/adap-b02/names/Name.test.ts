@@ -73,7 +73,11 @@ describe("AsDataString test1", () => {
     
     let sn: Name = new StringName("fau\\.oss.cs.de", '.');
     let san: Name = new StringArrayName(["fau\\.oss", "cs", "de"], '.');
-  
+    
+    console.log(sn);
+    console.log(san);
+    console.log(sn.asDataString());
+    console.log(san.asDataString());
     expect(sn.asDataString()).toBe(san.asDataString());
   });
 });
