@@ -80,8 +80,9 @@ export class StringName implements Name {
             throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents() - 1}.`);
         }
         for (let j = 0; j < c.length; j++) {
-            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
-                throw new Error("Invalid Input");
+            if (c[j] == this.delimiter && 
+                (c[j-1] != ESCAPE_CHARACTER || (c[j-1] === ESCAPE_CHARACTER && c[j-2] === ESCAPE_CHARACTER))){
+                    throw new Error(`Invalid Input`);
             }
         }
         const components = this.name.split(this.delimiter);
@@ -94,8 +95,9 @@ export class StringName implements Name {
             throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents()}.`);
         }
         for (let j = 0; j < c.length; j++) {
-            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
-                throw new Error("Invalid Input");
+            if (c[j] == this.delimiter && 
+                (c[j-1] != ESCAPE_CHARACTER || (c[j-1] === ESCAPE_CHARACTER && c[j-2] === ESCAPE_CHARACTER))){
+                    throw new Error(`Invalid Input`);
             }
         }
         const components = this.name.split(this.delimiter);
@@ -106,8 +108,9 @@ export class StringName implements Name {
 
     public append(c: string): void {
         for (let j = 0; j < c.length; j++) {
-            if (c[j] == this.delimiter && (c[j-1] != ESCAPE_CHARACTER || c[j-1] === undefined)) {
-                throw new Error("Invalid Input");
+            if (c[j] == this.delimiter && 
+                (c[j-1] != ESCAPE_CHARACTER || (c[j-1] === ESCAPE_CHARACTER && c[j-2] === ESCAPE_CHARACTER))){
+                    throw new Error(`Invalid Input`);
             }
         }
         const components = this.name.split(this.delimiter);
