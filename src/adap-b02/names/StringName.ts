@@ -123,7 +123,6 @@ export class StringName implements Name {
             throw new RangeError(`Index ${n} is out of bounds. Must be between 0 and ${this.getNoComponents() - 1}.`);
         }
         const components = this.name.split(this.delimiter);
-        const len = components[n].length
         components.splice(n, 1);
         this.name = components.join(this.delimiter);
         this.length --;

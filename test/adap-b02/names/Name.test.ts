@@ -71,9 +71,10 @@ describe("AsString tests", () => {
 describe("AsDataString test1", () => {
   it("test masked delimiter in StringName and StringArrayName", () => {
     
-    let sn: Name = new StringName("fau\\.oss.cs.de", '.');
-    let san: Name = new StringArrayName(["fau\\.oss", "cs", "de"], '.');
-    
+    let sn: Name = new StringName("fau.oss.cs.de", '.');
+    let san: Name = new StringArrayName(["fau", "oss", "cs", "de"], '.');
+    sn.append("test\\.test");
+    san.append("test\\.test");
     expect(sn.asDataString()).toBe(san.asDataString());
   });
 });
