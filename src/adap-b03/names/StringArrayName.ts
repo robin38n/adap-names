@@ -9,7 +9,7 @@ export class StringArrayName extends AbstractName {
         if (other.length === 0){
             throw new Error("Empty Array not allowed.");
         }
-        super();
+        super(delimiter);
         for (let i = 0; i < other.length; i++) {
             const c = other[i];
             let isEscaped = false;
@@ -39,6 +39,7 @@ export class StringArrayName extends AbstractName {
         }
         return this.components[i];
     }
+
     setComponent(i: number, c: string) {
         if (i < 0 || i >= this.components.length) {
             throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.components.length - 1}.`);
