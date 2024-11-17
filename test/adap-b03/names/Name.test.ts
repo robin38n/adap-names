@@ -1,12 +1,17 @@
 import { describe, it, expect } from "vitest";
 
-import { Name } from "../../../src/adap-b02/names/Name";
-import { StringName } from "../../../src/adap-b02/names/StringName";
-import { StringArrayName } from "../../../src/adap-b02/names/StringArrayName";
+import { Name } from "../../../src/adap-b03/names/Name";
+import { StringName } from "../../../src/adap-b03/names/StringName";
+import { StringArrayName } from "../../../src/adap-b03/names/StringArrayName";
 
 describe("Basic StringName function tests", () => {
   it("test insert", () => {
     let n: Name = new StringName("oss.fau.de");
+    n.insert(1, "cs");
+    expect(n.asString()).toBe("oss.cs.fau.de");
+  });
+  it("test insert array", () => {
+    let n: Name = new StringArrayName(["oss", "fau", "de"]);
     n.insert(1, "cs");
     expect(n.asString()).toBe("oss.cs.fau.de");
   });
@@ -21,6 +26,7 @@ describe("Basic StringName function tests", () => {
     expect(n.asString()).toBe("cs.fau.de");
   });
 });
+
 
 describe("Basic StringArrayName function tests", () => {
   it("test insert", () => {
@@ -63,7 +69,7 @@ describe("AsString tests", () => {
     
     let sn: Name = new StringName("cs.fau\\.oss.de", '.');
     let san: Name = new StringArrayName(["cs", "fau\\.oss", "de"], '.'); 
-    
+    expect(sn.asString()).toBe(san.asString());
     expect(sn.asString('-')).toBe(san.asString('-'));
   });
 });
@@ -71,11 +77,43 @@ describe("AsString tests", () => {
 describe("AsDataString test1", () => {
   it("test masked delimiter in StringName and StringArrayName", () => {
     
-    let sn: Name = new StringName("fau.oss.cs.de", '.');
-    let san: Name = new StringArrayName(["fau", "oss", "cs", "de"], '.');
+    
+    let sn: Name = new StringName("cs.fau\\.oss.de", '.');
+    let san: Name = new StringArrayName(["cs", "fau\\.oss", "de"], '.'); 
     sn.append("test\\test");
     san.append("test\\test");
-    expect(sn.asString()).toBe(san.asString());
+    expect(sn.asDataString()).toBe(san.asDataString());
+  });
+});
+
+describe("getComponent test", () => {
+  it("test getComp in StringName and StringArrayName", () => {
+    let sn: Name = new StringName("fau.oss\\.cs.de", '.');
+    let san: Name = new StringArrayName(["fau", "oss\\.cs", "de"], '.');
+    
+    expect(sn.getNoComponents()).toBe(san.getNoComponents());
+
+    // Überprüfe jede Komponente
+    for (let i = 0; i < sn.getNoComponents(); i++) {
+      expect(sn.getComponent(i)).toBe(san.getComponent(i));
+    }
+  });
+});
+
+describe("Equality test", () => {
+  it("test equality on StringName and StringArrayName", () => {
+    let sn: Name = new StringName("cs.fau\\.oss.de", '.');
+    let san: Name = new StringArrayName(["cs", "fau\\.oss", "de"], '.'); 
+    sn.append("test\\test");
+    san.append("test\\test");
+    expect(sn.isEqual(san)).toBe(true);
+  });
+  it("test equality of clone", () => {
+    let n: Name = new StringName("fau", '#');
+    let cloneN = n.clone();
+  
+    expect(n.isEqual(cloneN)).toBe(true);
+
   });
 });
 

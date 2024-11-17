@@ -12,13 +12,43 @@ export abstract class AbstractName implements Name {
         }
     }
 
-    abstract asString(delimiter: string): string;
+    public asString(delimiter: string = this.getDelimiterCharacter()): string {
+        if (delimiter.length != 1) {
+            throw new Error ("delimiter expected to be a single character");
+        }
+        if (this.isEmpty()){
+            return "";
+        } 
+        let str = "";
+        for (let i = 0; i < this.getNoComponents(); i++) {
+            let component = this.getComponent(i);
+            let cleanedComp = "";
+            for (let j = 0; j < component.length; j++) {
+                if (component[j] != ESCAPE_CHARACTER) {
+                    cleanedComp += component[j];
+                }
+            }
+            str += (i === 0 ? "" : delimiter) + cleanedComp;
+        }
+        return str;
+        
+    }
 
     public toString(): string {
         return this.asDataString();
     }
 
-    abstract asDataString(): string;
+    public asDataString(): string {
+        if (this.isEmpty()){
+            return "";
+        } 
+        let delimiter = this.getDelimiterCharacter();
+        let str = this.getComponent(0);
+        for (let i = 1; i < this.getNoComponents(); i++) {
+            str += (i === 0 ? "" : delimiter) + this.getComponent(i);
+        }
+        return str;
+    }
 
     public isEqual(other: Name): boolean {
         if (this.getHashCode() == other.getHashCode()){

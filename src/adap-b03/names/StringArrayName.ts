@@ -21,40 +21,6 @@ export class StringArrayName extends AbstractName {
         this.components = other;
     }
 
-    asString(delimiter: string = this.delimiter): string {
-        if (this.components.length === 0){
-            return "";
-        } 
-
-        let str: string = "";
-        for (let i = 0; i < this.components.length; i++) {
-            str += (i === 0 ? "" : delimiter) + this.components[i];
-        }
-        return str;
-    }
-
-    asDataString(): string {
-        if (this.components.length === 0){
-            return "";
-        }
-        const delimiter = this.getDelimiterCharacter();
-        let str: string = "";
-        for (let i = 0; i < this.components.length; i++) {
-            let component = this.components[i];
-            let escapedComponent = "";
-            
-            for (let j = 0; j < component.length; j++) {
-                if (component[j] === ESCAPE_CHARACTER && component[j+1] != delimiter) {
-                    escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
-                } else {
-                    escapedComponent += component[j];
-                }
-            }
-            str += (i === 0 ? "" : delimiter) + escapedComponent;
-        }
-        return str;
-    }
-
     getNoComponents(): number {
         return this.components.length;
     }
