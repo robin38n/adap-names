@@ -48,19 +48,5 @@ export interface Name extends Printable, Cloneable, Equality {
     remove(i: number): void;
     
     concat(other: Name): void;
-
-    /** Added missing methods to interface */
-
-    asDataString(): string;
-
-    toString(): string;
-
-    asString(delimiter: string): string;
-
-    isEqual(other: Name): boolean;
-
-    getHashCode(): number;
-
-    clone(): Name;
     
 }

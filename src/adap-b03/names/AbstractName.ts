@@ -15,7 +15,7 @@ export abstract class AbstractName implements Name {
     abstract asString(delimiter: string): string;
 
     public toString(): string {
-        return this.asString(this.getDelimiterCharacter());
+        return this.asDataString();
     }
 
     abstract asDataString(): string;
@@ -40,7 +40,16 @@ export abstract class AbstractName implements Name {
     }
 
     public clone(): Name {
-        return structuredClone(this);
+        /*  Wenn zirkuläre Referenzen -> Fehler,
+            aber in dieser Implementierung nicht vorhanden
+        **/
+    
+        const clonedData = structuredClone(this);
+
+        const clone = Object.create(
+            Object.getPrototypeOf(this));
+        
+        return Object.assign(clone, clonedData);
     }
 
     public isEmpty(): boolean {
