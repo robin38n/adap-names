@@ -108,14 +108,21 @@ describe("Equality test", () => {
     san.append("test\\test");
     expect(sn.isEqual(san)).toBe(true);
   });
-  it("test equality of clone", () => {
-    let n: Name = new StringName("fau", '#');
-    let cloneN = n.clone();
-  
-    expect(n.isEqual(cloneN)).toBe(true);
 
+  it("test equality of clone", () => {
+    
+    let original = new StringName("fau.oss\\.cs.de", '.');
+    let cloned = original.clone();
+    let n = new StringArrayName(["a", "b"], '$');
+    let cn = n.clone();
+    n.remove(0);
+    cn.remove(0);
+    expect(cn.isEqual(n)).toBe(true);
+    
+    cloned.append("a");
+    original.append("a");
+    expect(cloned.isEqual(original)).toBe(true);
   });
 });
-
 
 

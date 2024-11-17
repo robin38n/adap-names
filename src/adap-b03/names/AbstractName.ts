@@ -76,8 +76,7 @@ export abstract class AbstractName implements Name {
     
         const clonedData = structuredClone(this);
 
-        const clone = Object.create(
-            Object.getPrototypeOf(this));
+        const clone = Object.create(Object.getPrototypeOf(this));
         
         return Object.assign(clone, clonedData);
     }
