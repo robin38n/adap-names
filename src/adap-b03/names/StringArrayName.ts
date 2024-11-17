@@ -19,7 +19,7 @@ export class StringArrayName extends AbstractName {
                 } else {
                     if (c[j] === this.delimiter) {
                         if (!isEscaped) {
-                            throw new Error (`Invalid Input at conmponent ${i}.`);
+                            throw new Error (`Invalid Input at component ${i}.`);
                         }
                     }
                 isEscaped = false;

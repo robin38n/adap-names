@@ -12,7 +12,7 @@ export abstract class AbstractName implements Name {
         }
     }
 
-    public asString(delimiter: string = this.getDelimiterCharacter()): string {
+    public asString(delimiter: string = this.delimiter): string {
         if (delimiter.length != 1) {
             throw new Error ("delimiter expected to be a single character");
         }
@@ -107,6 +107,7 @@ export abstract class AbstractName implements Name {
             this.append(other.getComponent(i));
         }
     }
+
     /**
      * checks if Input is valid.
      * valid if: delimiter correctly escaped 

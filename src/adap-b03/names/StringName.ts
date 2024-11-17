@@ -37,30 +37,8 @@ export class StringName extends AbstractName {
         if (i < 0 || i >= this.getNoComponents()) {
             throw new RangeError(`Index ${i} is out of bounds. Must be between 0 and ${this.getNoComponents() - 1}.`);
         }
-    
-        const components: string[] = [];
-        let currentComponent = "";
-        let isEscaped = false;
-
-        for (let j = 0; j < this.name.length; j++) {
-            const char = this.name[j];
-
-            if (isEscaped) {
-                currentComponent += char;
-                isEscaped = false;
-            } else if (char === ESCAPE_CHARACTER) {
-                isEscaped = true;
-                currentComponent += char;
-            } else if (char === this.getDelimiterCharacter()) {
-                components.push(currentComponent);
-                currentComponent = "";
-            } else {
-                currentComponent += char;
-            }
-        }
-
-        components.push(currentComponent);
-
+        let components = this.splitToArray();
+        
         return components[i];
 
     }
@@ -118,4 +96,31 @@ export class StringName extends AbstractName {
         this.name = components.join(this.delimiter);
         this.length --;
     }
+
+    private splitToArray(): string[] {
+        const components: string[] = [];
+        let currentComponent = "";
+        let isEscaped = false;
+
+        for (let j = 0; j < this.name.length; j++) {
+            const char = this.name[j];
+
+            if (isEscaped) {
+                currentComponent += char;
+                isEscaped = false;
+            } else if (char === ESCAPE_CHARACTER) {
+                isEscaped = true;
+                currentComponent += char;
+            } else if (char === this.getDelimiterCharacter()) {
+                components.push(currentComponent);
+                currentComponent = "";
+            } else {
+                currentComponent += char;
+            }
+        }
+
+        components.push(currentComponent);
+        return components;
+    }
+
 }

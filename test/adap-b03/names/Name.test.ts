@@ -69,6 +69,8 @@ describe("AsString tests", () => {
     
     let sn: Name = new StringName("cs.fau\\.oss.de", '.');
     let san: Name = new StringArrayName(["cs", "fau\\.oss", "de"], '.'); 
+    sn.append("test\\\\t");
+    san.append("test\\\\t");
     expect(sn.asString()).toBe(san.asString());
     expect(sn.asString('-')).toBe(san.asString('-'));
   });
@@ -82,6 +84,8 @@ describe("AsDataString test1", () => {
     let san: Name = new StringArrayName(["cs", "fau\\.oss", "de"], '.'); 
     sn.append("test\\test");
     san.append("test\\test");
+    sn.append("test\\\\t");
+    san.append("test\\\\t");
     expect(sn.asDataString()).toBe(san.asDataString());
   });
 });
