@@ -11,10 +11,18 @@ export class StringArrayName extends AbstractName {
         }
         super();
         for (let i = 0; i < other.length; i++) {
-            for (let j = 0; j < other[i].length; j++) {
-                if (other[i][j] == this.delimiter && 
-                    (other[i][j-1] != ESCAPE_CHARACTER || (other[i][j-1] === ESCAPE_CHARACTER && other[i][j-2] === ESCAPE_CHARACTER))){
-                        throw new Error(`Invalid Input at component no ${i}.`);
+            const c = other[i];
+            let isEscaped = false;
+            for (let j = 0; j < c.length; j++) {
+                if (c[j] === ESCAPE_CHARACTER) {
+                    isEscaped = !isEscaped;
+                } else {
+                    if (c[j] === this.delimiter) {
+                        if (!isEscaped) {
+                            throw new Error (`Invalid Input at conmponent ${i}.`);
+                        }
+                    }
+                isEscaped = false;
                 }
             }
         }
