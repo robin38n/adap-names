@@ -80,8 +80,8 @@ describe("AsDataString test1", () => {
   it("test masked delimiter in StringName and StringArrayName", () => {
     
     
-    let sn: Name = new StringName("cs.fau\\.oss.de", '.');
-    let san: Name = new StringArrayName(["cs", "fau\\.oss", "de"], '.'); 
+    let sn: Name = new StringName(".fau\\.oss.de", '.');
+    let san: Name = new StringArrayName(["", "fau\\.oss", "de"], '.'); 
     sn.append("test\\test");
     san.append("test\\test");
     sn.append("test\\\\t");
@@ -106,8 +106,8 @@ describe("getComponent test", () => {
 
 describe("Equality test", () => {
   it("test equality on StringName and StringArrayName", () => {
-    let sn: Name = new StringName("cs.fau\\.oss.de", '.');
-    let san: Name = new StringArrayName(["cs", "fau\\.oss", "de"], '.'); 
+    let sn: Name = new StringName("fau.cs", '.');
+    let san: Name = new StringArrayName(["fau", "cs"], '.'); 
     sn.append("test\\test");
     san.append("test\\test");
     expect(sn.isEqual(san)).toBe(true);
@@ -126,6 +126,23 @@ describe("Equality test", () => {
     cloned.append("a");
     original.append("a");
     expect(cloned.isEqual(original)).toBe(true);
+  });
+});
+
+describe("concat test", () => {
+  it("test equality on StringName and StringArrayName", () => {
+    let sn: Name = new StringName("cs.fau\\.oss.de", '.');
+    sn.concat(new StringName("cs.fau\\.oss.de", '.'));
+    expect(sn.asDataString()).toBe("cs.fau\\.oss.de.cs.fau\\.oss.de")
+  });
+});
+
+describe("Test concat", () => {
+  it("Test concat!!", () => {
+    let n: Name = new StringName("oss.cs.fau.de", ".");
+    let an: Name = new StringArrayName(["oss", "cs", "fau", "de"], ".");
+    n.concat(an);
+    expect(n.asDataString()).toBe("oss.cs.fau.de.oss.cs.fau.de");
   });
 });
 
