@@ -7,7 +7,7 @@ export class Coordinate {
         this.initialize(x, y);
     }
 
-    public static getOrigin(): Coordinate {
+    public static createOrigin(): Coordinate {
         return new Coordinate(0, 0);
     }
 
@@ -36,8 +36,8 @@ export class Coordinate {
     public getHashCode(): number {
         let hashCode: number = 0;
         const s: string = this.asDataString();
-        for (let i = 0; i < s.length; i++) {
-            let c = s.charCodeAt(i);
+        for (let i: number = 0; i < s.length; i++) {
+            let c: number = s.charCodeAt(i);
             hashCode = (hashCode << 5) - hashCode + c;
             hashCode |= 0;
         }

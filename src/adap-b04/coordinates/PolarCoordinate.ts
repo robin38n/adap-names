@@ -12,11 +12,7 @@ export class PolarCoordinate extends AbstractCoordinate {
         this.initialize(r, phi);
     }
 
-    public static getOrigin(): Coordinate {
-        return new PolarCoordinate(0, 0);
-    }
-
-    public initialize(r?: number, phi?: number): void {
+    protected initialize(r?: number, phi?: number): void {
         if (r != undefined) {
             this.setR(r);
         }
@@ -24,6 +20,10 @@ export class PolarCoordinate extends AbstractCoordinate {
         if (phi != undefined) {
             this.setPhi(phi);
         }
+    }
+
+    public clone(): Coordinate {
+        return new PolarCoordinate(this.doGetR(), this.doGetPhi());
     }
 
     public reset(): void {

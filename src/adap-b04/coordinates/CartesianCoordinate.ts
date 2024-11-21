@@ -12,11 +12,7 @@ export class CartesianCoordinate extends AbstractCoordinate {
         this.initialize(x, y);
     }
 
-    public static getOrigin(): Coordinate {
-        return new CartesianCoordinate(0, 0);
-    }
-
-    public initialize(x?: number, y?: number): void {
+    protected initialize(x?: number, y?: number): void {
         if (x != undefined) {
             this.doSetX(x);
         }
@@ -24,6 +20,10 @@ export class CartesianCoordinate extends AbstractCoordinate {
         if (y != undefined) {
             this.doSetY(y);
         }
+    }
+
+    public clone(): Coordinate {
+        return new CartesianCoordinate(this.doGetX(), this.doGetY());
     }
 
     public reset(): void {
@@ -38,7 +38,7 @@ export class CartesianCoordinate extends AbstractCoordinate {
         this.x = x;
     }
     
-    public doGetY(): number {
+    protected doGetY(): number {
         return this.y;
     }
 

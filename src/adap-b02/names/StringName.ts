@@ -1,17 +1,25 @@
-import { Name, DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "./Name";
+import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
+import { Name } from "./Name";
 
 export class StringName implements Name {
 
     protected delimiter: string = DEFAULT_DELIMITER;
-
     protected name: string = "";
-    protected length: number = 0; // Number of components in Name instance
+    protected noComponents: number = 0;
 
     constructor(other: string, delimiter?: string) {
         throw new Error("needs implementation");
     }
 
-    public asNameString(delimiter: string = this.delimiter): string {
+    public asString(delimiter: string = this.delimiter): string {
+        throw new Error("needs implementation");
+    }
+
+    public asDataString(): string {
+        throw new Error("needs implementation");
+    }
+
+    public getDelimiterCharacter(): string {
         throw new Error("needs implementation");
     }
 
