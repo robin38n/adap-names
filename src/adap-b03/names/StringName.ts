@@ -1,10 +1,11 @@
-import { Name, DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "./Name";
+import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
+import { Name } from "./Name";
 import { AbstractName } from "./AbstractName";
 
 export class StringName extends AbstractName {
 
     protected name: string = "";
-    protected length: number = 0;
+    protected noComponents: number = 0;
 
     constructor(other: string, delimiter?: string) {
         if (other.length === 0){
@@ -12,7 +13,7 @@ export class StringName extends AbstractName {
         }
         super(delimiter);
         this.name = other;
-        this.length = 1; 
+        this.noComponents = 1; 
 
         let isEscaped = false;
         for (let i = 0; i < other.length; i++) {
@@ -21,7 +22,7 @@ export class StringName extends AbstractName {
             } else {
                 if (other[i] === this.delimiter) {
                     if (!isEscaped) {
-                        this.length ++;
+                        this.noComponents ++;
                     }
                 }
                 isEscaped = false;
@@ -30,7 +31,7 @@ export class StringName extends AbstractName {
     }
 
     getNoComponents(): number {
-        return this.length;
+        return this.noComponents;
     }
 
     getComponent(i: number): string {
@@ -69,7 +70,7 @@ export class StringName extends AbstractName {
         }
         components.splice(i, 0, c);
         this.name = components.join(this.delimiter);
-        this.length ++;
+        this.noComponents ++;
     }
 
     append(c: string) {
@@ -81,7 +82,7 @@ export class StringName extends AbstractName {
         }
         components.push(c);
         this.name = components.join(this.delimiter);
-        this.length ++;
+        this.noComponents ++;
     }
 
     remove(i: number) {
@@ -94,7 +95,7 @@ export class StringName extends AbstractName {
         }
         components.splice(i, 1);
         this.name = components.join(this.delimiter);
-        this.length --;
+        this.noComponents --;
     }
 
     private splitToArray(): string[] {

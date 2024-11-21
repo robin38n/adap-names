@@ -1,11 +1,11 @@
-import { Name, DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "./Name";
+import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
+import { Name } from "./Name";
 
 export class StringName implements Name {
 
     protected delimiter: string = DEFAULT_DELIMITER;
-
     protected name: string = "";
-    protected length: number = 0;
+    protected noComponents: number = 0;
 
     constructor(other: string, delimiter?: string) {
         if (other.length === 0){
@@ -18,7 +18,7 @@ export class StringName implements Name {
             this.delimiter = DEFAULT_DELIMITER;
         }
         this.name = other;
-        this.length = 1; 
+        this.noComponents = 1; 
 
         let isEscaped = false;
         for (let i = 0; i < other.length; i++) {
@@ -27,7 +27,7 @@ export class StringName implements Name {
             } else {
                 if (other[i] === this.delimiter) {
                     if (!isEscaped) {
-                        this.length ++;
+                        this.noComponents ++;
                     }
                 }
                 isEscaped = false;
@@ -76,7 +76,7 @@ export class StringName implements Name {
     }
 
     public getNoComponents(): number {
-        return this.length;
+        return this.noComponents;
     }
 
     public getComponent(x: number): string {
@@ -106,7 +106,7 @@ export class StringName implements Name {
         const components = this.name.split(this.delimiter);
         components.splice(n, 0, c);
         this.name = components.join(this.delimiter);
-        this.length ++;
+        this.noComponents ++;
     }
 
     public append(c: string): void {
@@ -115,7 +115,7 @@ export class StringName implements Name {
         const components = this.name.split(this.delimiter);
         components.push(c);
         this.name = components.join(this.delimiter);
-        this.length ++;
+        this.noComponents ++;
     }
 
     public remove(n: number): void {
@@ -125,14 +125,14 @@ export class StringName implements Name {
         const components = this.name.split(this.delimiter);
         components.splice(n, 1);
         this.name = components.join(this.delimiter);
-        this.length --;
+        this.noComponents --;
     }
 
     public concat(other: Name): void {
         if (other.getDelimiterCharacter() !== this.delimiter) {
             throw new Error("Delimiters do not match.");
         }
-        this.length += other.getNoComponents();
+        this.noComponents += other.getNoComponents();
     
         const components = this.name.split(this.delimiter);
         for (let i = 0; i < other.getNoComponents(); i++) {
