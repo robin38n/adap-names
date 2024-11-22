@@ -127,7 +127,7 @@ export abstract class AbstractName implements Name {
                         return false;
                     }
                 }
-            isEscaped = false; // Reset für den nächsten Charakter
+                isEscaped = false; // Reset für den nächsten Charakter
             }
         }
         return true;
