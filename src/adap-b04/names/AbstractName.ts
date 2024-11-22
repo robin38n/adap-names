@@ -10,39 +10,83 @@ export abstract class AbstractName implements Name {
     protected delimiter: string = DEFAULT_DELIMITER;
 
     constructor(delimiter: string = DEFAULT_DELIMITER) {
-        throw new Error("needs implementation");
+        if (delimiter !== undefined) {
+            this.delimiter = delimiter;
+        } else {
+            this.delimiter = DEFAULT_DELIMITER;
+        }
     }
 
     public clone(): Name {
-        throw new Error("needs implementation");
+        const clonedData = structuredClone(this);
+        const clone = Object.create(Object.getPrototypeOf(this));
+        return Object.assign(clone, clonedData);
     }
 
     public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation");
+        this.assertIsValidDelChar(delimiter);
+
+        if (this.isEmpty()){
+            return "";
+        } 
+        let str = "";
+        for (let i = 0; i < this.getNoComponents(); i++) {
+            let component = this.getComponent(i);
+            let cleanedComp = "";
+            for (let j = 0; j < component.length; j++) {
+                if (component[j] != ESCAPE_CHARACTER) {
+                    cleanedComp += component[j];
+                }
+            }
+            str += (i === 0 ? "" : delimiter) + cleanedComp;
+        }
+        return str;
+        
     }
 
     public toString(): string {
-        throw new Error("needs implementation");
+        return this.asDataString();
     }
 
     public asDataString(): string {
-        throw new Error("needs implementation");
+        if (this.isEmpty()){
+            return "";
+        } 
+        let delimiter = this.getDelimiterCharacter();
+        let str = this.getComponent(0);
+        for (let i = 1; i < this.getNoComponents(); i++) {
+            str += (i === 0 ? "" : delimiter) + this.getComponent(i);
+        }
+        return str;
     }
 
     public isEqual(other: Name): boolean {
-        throw new Error("needs implementation");
+        this.assertIsNotNullOrUndefined(other);
+
+        if (this.getHashCode() == other.getHashCode()){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public getHashCode(): number {
-        throw new Error("needs implementation");
+        let hashCode: number = 0;
+        const s: string = this.asDataString();
+        for (let i = 0; i < s.length; i++) {
+            let c = s.charCodeAt(i);
+            hashCode = (hashCode << 5) - hashCode + c;
+            hashCode |= 0;
+        }
+        return hashCode;
     }
 
     public isEmpty(): boolean {
-        throw new Error("needs implementation");
+        return this.getNoComponents() == 0 ? true : false;
     }
 
     public getDelimiterCharacter(): string {
-        throw new Error("needs implementation");
+        return this.delimiter;
     }
 
     abstract getNoComponents(): number;
@@ -55,7 +99,12 @@ export abstract class AbstractName implements Name {
     abstract remove(i: number): void;
 
     public concat(other: Name): void {
-        throw new Error("needs implementation");
+        this.assertIsNotNullOrUndefined(other);
+        this.assertMatchingDelChars(other, this.getDelimiterCharacter());
+
+        for (let i = 0; i < other.getNoComponents(); i++) {
+            this.append(other.getComponent(i));
+        }
     }
 
     // protected assertion methods
@@ -64,14 +113,47 @@ export abstract class AbstractName implements Name {
         let condition: boolean = !IllegalArgumentException.isNullOrUndefined(other);
         IllegalArgumentException.assertCondition(condition, "null or undefined argument");        
     }
-    
-    protected assertIsValidPhi(phi: number): void {
-        let condition: boolean = (phi < 0) || (phi >= 2*Math.PI);
-        IllegalArgumentException.assertCondition(condition, "invalid phi value");
-    }
 
     protected assertIsValidDelChar(d: string) {
         let condition: boolean = (d.length == 1);
         IllegalArgumentException.assertCondition(condition, "invalid delimiter character");
     }
+
+    protected assertMatchingDelChars(other: Name, delimiter: string) {
+        let condition: boolean = (other.getDelimiterCharacter() === delimiter);
+        IllegalArgumentException.assertCondition(condition, "delimiters differ");
+    }
+
+    protected assertIsValidIndex(i: number) {
+        let condition: boolean = true;
+        if (i < 0 || i >= this.getNoComponents()) condition = false;
+        IllegalArgumentException.assertCondition(condition, `Index ${i} is out of bounds.`);
+    }
+    
+    /**
+     * checks if Input Component is valid.
+     * valid if: delimiter correctly escaped 
+     *  -> odd number of escape char in front of delimiter -> true
+     *  -> even number  or zero -> false
+     */
+    protected assertIsValidComponent(c: string) {
+        let condition: boolean = true;
+        let isEscaped = false;
+        for (let j = 0; j < c.length; j++) {
+            if (c[j] === ESCAPE_CHARACTER) {
+                isEscaped = !isEscaped;
+            } else {
+                if (c[j] === this.delimiter) {
+                    // Der Delimiter ist nur gültig, wenn isEscaped true ist
+                    if (!isEscaped) {
+                        condition = false;
+                        break;
+                    }
+                }
+                isEscaped = false; // Reset für den nächsten Charakter
+            }
+        }
+        IllegalArgumentException.assertCondition(condition, "Component no properly masked")
+    }
+    
 }

@@ -12,64 +12,78 @@ export class StringName extends AbstractName {
         throw new Error("needs implementation");
     }
 
-    public clone(): Name {
-        throw new Error("needs implementation");
-    }
-
-    public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation");
-    }
-
-    public toString(): string {
-        throw new Error("needs implementation");
-    }
-
-    public asDataString(): string {
-        throw new Error("needs implementation");
-    }
-
-    public isEqual(other: Name): boolean {
-        throw new Error("needs implementation");
-    }
-
-    public getHashCode(): number {
-        throw new Error("needs implementation");
-    }
-
-    public isEmpty(): boolean {
-        throw new Error("needs implementation");
-    }
-
-    public getDelimiterCharacter(): string {
-        throw new Error("needs implementation");
-    }
-
     public getNoComponents(): number {
-        throw new Error("needs implementation");
+        return this.noComponents;
     }
 
     public getComponent(i: number): string {
-        throw new Error("needs implementation");
+        this.assertIsValidIndex(i);
+
+        let components = this.splitToArray();
+        return components[i];
     }
 
     public setComponent(i: number, c: string) {
-        throw new Error("needs implementation");
+        this.assertIsValidIndex(i);
+        this.assertIsValidComponent(c);
+
+        let components = this.splitToArray();
+        components[i] = c;
+        this.name = components.join(this.delimiter);
     }
 
     public insert(i: number, c: string) {
-        throw new Error("needs implementation");
+        this.assertIsValidIndex(i);
+        this.assertIsValidComponent(c);
+
+        let components = this.splitToArray();
+        components.splice(i, 0, c);
+        this.name = components.join(this.delimiter);
+        this.noComponents ++;
     }
 
     public append(c: string) {
-        throw new Error("needs implementation");
+        this.assertIsValidComponent(c);
+
+        let components = this.splitToArray();
+        components.push(c);
+        this.name = components.join(this.delimiter);
+        this.noComponents ++;
     }
 
     public remove(i: number) {
-        throw new Error("needs implementation");
+        this.assertIsValidIndex(i);
+
+        let components = this.splitToArray();
+        components.splice(i, 1);
+        this.name = components.join(this.delimiter);
+        this.noComponents --;
     }
 
-    public concat(other: Name): void {
-        throw new Error("needs implementation");
+    private splitToArray(): string[] {
+        const components: string[] = [];
+        let currentComponent = "";
+        let isEscaped = false;
+
+        for (let i = 0; i < this.name.length; i++) {
+            const char = this.name[i];
+
+            if (isEscaped) {
+                currentComponent += char;
+                isEscaped = false;
+            } else if (char === ESCAPE_CHARACTER) {
+                isEscaped = true;
+                currentComponent += char;
+            } else if (char === this.getDelimiterCharacter()) {
+                components.push(currentComponent);
+                currentComponent = "";
+            } else {
+                currentComponent += char;
+            }
+        }
+
+        components.push(currentComponent);
+        return components;
     }
 
 }
