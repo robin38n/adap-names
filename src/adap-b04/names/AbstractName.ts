@@ -1,5 +1,9 @@
 import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
+import { IllegalArgumentException } from "../common/IllegalArgumentException";
+import { MethodFailureException } from "../common/MethodFailureException";
+import { InvalidStateException } from "../common/InvalidStateException";
+
 
 export abstract class AbstractName implements Name {
 
@@ -54,4 +58,20 @@ export abstract class AbstractName implements Name {
         throw new Error("needs implementation");
     }
 
+    // protected assertion methods
+    
+    protected assertIsNotNullOrUndefined(other: Object): void {
+        let condition: boolean = !IllegalArgumentException.isNullOrUndefined(other);
+        IllegalArgumentException.assertCondition(condition, "null or undefined argument");        
+    }
+    
+    protected assertIsValidPhi(phi: number): void {
+        let condition: boolean = (phi < 0) || (phi >= 2*Math.PI);
+        IllegalArgumentException.assertCondition(condition, "invalid phi value");
+    }
+
+    protected assertIsValidDelChar(d: string) {
+        let condition: boolean = (d.length == 1);
+        IllegalArgumentException.assertCondition(condition, "invalid delimiter character");
+    }
 }

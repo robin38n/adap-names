@@ -16,11 +16,15 @@ export class File extends Node {
     }
 
     public open(): void {
+        this.assertStateCondition(this.doGetFileState() !== FileState.CLOSED, "File must be closed to open");
         // do something
+        this.state = FileState.OPEN;
     }
 
     public close(): void {
+        this.assertStateCondition(this.doGetFileState() !== FileState.OPEN, "File must be open to close");
         // do something
+        this.state = FileState.CLOSED;
     }
 
     protected doGetFileState(): FileState {
