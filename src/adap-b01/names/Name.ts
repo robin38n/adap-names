@@ -65,21 +65,66 @@ export class Name {
      * Returns a human-readable representation of the Name instance using user-set control characters
      * Control characters are not escaped (creating a human-readable string)
      * Users can vary the delimiter character to be used
-     
-    public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation");
-    }
     */
+
+    public asString(delimiter: string = this.delimiter): string {
+        if (this.components.length == 0){
+            return "";
+        } 
+
+        let str: string = "";
+        for (let i = 0; i < this.components.length; i++) {
+            let component = this.components[i];
+            let escapedComponent = "";
+            for (let j = 0; j < component.length; j++) {
+                if (component[j] === ESCAPE_CHARACTER) {
+                    // Double the escape character
+                    escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
+                } else if (component[j] === delimiter) {
+                    // Escape the delimiter
+                    escapedComponent += ESCAPE_CHARACTER + delimiter;
+                } else {
+                    escapedComponent += component[j];
+                }
+            }
+            str += (i === 0 ? "" : delimiter) + escapedComponent;
+        }
+        return str;
+    }
+    
 
     /** 
      * Returns a machine-readable representation of Name instance using default control characters
      * Machine-readable means that from a data string, a Name can be parsed back in
      * The control characters in the data string are the default characters
-     
-    public asDataString(): string {
-        throw new Error("needs implementation");
-    }
     */
+
+    public asDataString(): string {
+        if (this.components.length == 0){
+            return "";
+        } 
+
+        let str: string = "";
+        const delimiter = this.delimiter;
+        for (let i = 0; i < this.components.length; i++) {
+            let component = this.components[i];
+            let escapedComponent = "";
+            for (let j = 0; j < component.length; j++) {
+                if (component[j] === ESCAPE_CHARACTER) {
+                    // Double the escape character
+                    escapedComponent += ESCAPE_CHARACTER + ESCAPE_CHARACTER;
+                } else if (component[j] === delimiter) {
+                    // Escape the delimiter
+                    escapedComponent += ESCAPE_CHARACTER + delimiter;
+                } else {
+                    escapedComponent += component[j];
+                }
+            }
+            str += (i === 0 ? "" : delimiter) + escapedComponent;
+        }
+        return str;
+    }
+    
 
     /** @methodtype get-method */
     public getComponent(i: number): string {
