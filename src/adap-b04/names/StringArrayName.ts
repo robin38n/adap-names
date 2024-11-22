@@ -3,6 +3,7 @@ import { Name } from "./Name";
 import { AbstractName } from "./AbstractName";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 import { InvalidStateException } from "../common/InvalidStateException";
+import { MethodFailureException } from "../common/MethodFailureException";
 
 export class StringArrayName extends AbstractName {
 
@@ -52,9 +53,11 @@ export class StringArrayName extends AbstractName {
     public setComponent(i: number, c: string) {
         this.assertIsValidIndex(i);
         this.assertIsValidComponent(c);
+        const backup ={ components: [...this.components] };
 
         this.components[i] = c;
         
+        this.assertPostcondition(this.components[i] === c, "setComponent", backup);
         this.assertClassInvariants();
     }
 
@@ -63,37 +66,52 @@ export class StringArrayName extends AbstractName {
         if (!validIndex) throw new IllegalArgumentException(`Index ${i} is out of bounds.`);
         this.assertIsValidComponent(c);
 
+        const backup ={ components: [...this.components] };
+
         this.components.splice(i, 0, c);
         
+        this.assertPostcondition(this.components[i] === c && this.getNoComponents() == backup.components.length + 1, "insert", backup);
         this.assertClassInvariants();
     }
 
     public append(c: string) {
         this.assertIsValidComponent(c);
+        const backup ={ components: [...this.components] };
 
         this.components.push(c);
-
+        
+        this.assertPostcondition(this.components[this.components.length - 1] === c && this.components.length == backup.components.length + 1, "append", backup);
         this.assertClassInvariants();
     }
 
     public remove(i: number) {
         this.assertIsValidIndex(i);
+        const backup ={ components: [...this.components] };
 
         this.components.splice(i, 1);
 
+        this.assertPostcondition(this.components.length == backup.components.length - 1, "remove", backup);
         this.assertClassInvariants();
     }
     
     protected assertClassInvariants(): void {
-        // Alle Komponenten korrekt
+        // all components valid
         for (const component of this.components) {
             this.assertIsValidComponent(component);
         }
-        // Name darf nicht leer sein
+        // name not empty
         if (this.getNoComponents() === 0) {
             throw new InvalidStateException("Name cannot be empty.");
         }
         
+    }
+
+    protected assertPostcondition(condition: boolean, message: string, backup: { components: string[] }): void {
+        if (!condition) {
+            this.components = [...backup.components];
+            this.assertClassInvariants();
+            throw new MethodFailureException(`Postcondition failed in Methode: ${message}`);
+        }
     }
 
 }

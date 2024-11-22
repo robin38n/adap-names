@@ -2,6 +2,8 @@ import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
 import { AbstractName } from "./AbstractName";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
+import { InvalidStateException } from "../common/InvalidStateException";
+import { MethodFailureException } from "../common/MethodFailureException";
 
 export class StringName extends AbstractName {
 
@@ -50,9 +52,12 @@ export class StringName extends AbstractName {
         this.assertIsValidIndex(i);
         this.assertIsValidComponent(c);
 
+        const backup = {name: this.name, length: this.noComponents}
         let components = this.splitToArray();
         components[i] = c;
         this.name = components.join(this.delimiter);
+        
+        this.assertPostcondition(this.getComponent(i) === c, "setComponent" , backup);
         this.assertClassInvariants();
         
     }
@@ -62,10 +67,13 @@ export class StringName extends AbstractName {
         if (!validIndex) throw new IllegalArgumentException(`Index ${i} is out of bounds.`);
         this.assertIsValidComponent(c);
 
+        const backup = {name: this.name, length: this.noComponents}
         let components = this.splitToArray();
         components.splice(i, 0, c);
         this.name = components.join(this.delimiter);
         this.noComponents ++;
+
+        this.assertPostcondition(this.getComponent(i) === c && this.noComponents === backup.length + 1, "insert" , backup);
         this.assertClassInvariants();
         
     }
@@ -73,10 +81,13 @@ export class StringName extends AbstractName {
     public append(c: string) {
         this.assertIsValidComponent(c);
 
+        const backup = {name: this.name, length: this.noComponents}
         let components = this.splitToArray();
         components.push(c);
         this.name = components.join(this.delimiter);
         this.noComponents ++;
+
+        this.assertPostcondition(this.getComponent(this.noComponents - 1) === c && this.noComponents === backup.length + 1, "append" , backup);
         this.assertClassInvariants();
         
     }
@@ -84,10 +95,13 @@ export class StringName extends AbstractName {
     public remove(i: number) {
         this.assertIsValidIndex(i);
 
+        const backup = {name: this.name, length: this.noComponents}
         let components = this.splitToArray();
         components.splice(i, 1);
         this.name = components.join(this.delimiter);
         this.noComponents --;
+
+        this.assertPostcondition(this.noComponents === backup.length - 1, "remove" , backup);
         this.assertClassInvariants();
         
     }
@@ -122,9 +136,22 @@ export class StringName extends AbstractName {
         // noComponents must match the number of components in name
         const actualComponents = this.splitToArray().length;
         if (this.noComponents !== actualComponents) {
-            throw new IllegalArgumentException(
+            throw new InvalidStateException(
                 `noComponents (${this.noComponents}) dont match actual number of components (${actualComponents}).`
             );
+        }
+        // name not empty
+        if (this.getNoComponents() === 0) {
+            throw new InvalidStateException("Name cannot be empty.");
+        }
+    }
+
+    protected assertPostcondition(condition: boolean, message: string, backup: { name: string, length: number }): void {
+        if (!condition) {
+            this.name = backup.name;
+            this.noComponents = backup.length;
+            this.assertClassInvariants();
+            throw new MethodFailureException(`Postcondition failed in Methode: ${message}`);
         }
     }
 

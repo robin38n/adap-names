@@ -16,6 +16,7 @@ export abstract class AbstractName implements Name {
     public clone(): Name {
         const clonedData = structuredClone(this);
         const clone = Object.create(Object.getPrototypeOf(this));
+        this.assertClassInvariants();
         return Object.assign(clone, clonedData);
     }
 
@@ -36,6 +37,7 @@ export abstract class AbstractName implements Name {
             }
             str += (i === 0 ? "" : delimiter) + cleanedComp;
         }
+        this.assertClassInvariants();
         return str;
         
     }
@@ -53,12 +55,13 @@ export abstract class AbstractName implements Name {
         for (let i = 1; i < this.getNoComponents(); i++) {
             str += (i === 0 ? "" : delimiter) + this.getComponent(i);
         }
+        this.assertClassInvariants();
         return str;
     }
 
     public isEqual(other: Name): boolean {
         this.assertIsNotNullOrUndefined(other);
-
+        this.assertClassInvariants();
         if (this.getHashCode() == other.getHashCode()){
             return true;
         } else {
@@ -74,14 +77,17 @@ export abstract class AbstractName implements Name {
             hashCode = (hashCode << 5) - hashCode + c;
             hashCode |= 0;
         }
+        this.assertClassInvariants();
         return hashCode;
     }
 
     public isEmpty(): boolean {
+        this.assertClassInvariants();
         return this.getNoComponents() == 0 ? true : false;
     }
 
     public getDelimiterCharacter(): string {
+        this.assertClassInvariants();
         return this.delimiter;
     }
 
@@ -101,6 +107,7 @@ export abstract class AbstractName implements Name {
         for (let i = 0; i < other.getNoComponents(); i++) {
             this.append(other.getComponent(i));
         }
+        this.assertClassInvariants();
     }
 
     /**
@@ -133,7 +140,6 @@ export abstract class AbstractName implements Name {
      *  -> even number  or zero -> false
      */
     protected assertIsValidComponent(c: string) {
-        let condition: boolean = true;
         let isEscaped = false;
         for (let j = 0; j < c.length; j++) {
             if (c[j] === ESCAPE_CHARACTER) {
@@ -142,28 +148,26 @@ export abstract class AbstractName implements Name {
                 if (c[j] === this.delimiter) {
                     // Der Delimiter ist nur gültig, wenn isEscaped true ist
                     if (!isEscaped) {
-                        condition = false;
-                        break;
+                        throw new IllegalArgumentException(`Component ${j} not properly masked`);
                     }
                 }
                 isEscaped = false; // Reset für den nächsten Charakter
             }
         }
-        IllegalArgumentException.assertCondition(condition, "Component no properly masked")
     }
     
     /**
      * Class Invariance Methods
      */
-    protected assertValidName() {
-        // Name darf nicht leer sein
+    protected assertClassInvariants() {
+        // name not empty
         if (this.getNoComponents() === 0) {
             throw new InvalidStateException("Name cannot be empty.");
         }
-        
-        // Delimiter muss konsistent sein
-        if (this.delimiter !== this.getDelimiterCharacter()) {
-            throw new IllegalArgumentException("Delimiter is inconsistent.");
-        }
     }
+
+    /**
+     * Postcondition
+     */
+    
 }
