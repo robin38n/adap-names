@@ -10,11 +10,7 @@ export abstract class AbstractName implements Name {
     protected delimiter: string = DEFAULT_DELIMITER;
 
     constructor(delimiter: string = DEFAULT_DELIMITER) {
-        if (delimiter !== undefined) {
-            this.delimiter = delimiter;
-        } else {
-            this.delimiter = DEFAULT_DELIMITER;
-        }
+        this.delimiter = delimiter;
     }
 
     public clone(): Name {
@@ -107,8 +103,9 @@ export abstract class AbstractName implements Name {
         }
     }
 
-    // protected assertion methods
-    
+    /**
+     * Precondition assertion Methods
+     */    
     protected assertIsNotNullOrUndefined(other: Object): void {
         let condition: boolean = !IllegalArgumentException.isNullOrUndefined(other);
         IllegalArgumentException.assertCondition(condition, "null or undefined argument");        
@@ -125,8 +122,7 @@ export abstract class AbstractName implements Name {
     }
 
     protected assertIsValidIndex(i: number) {
-        let condition: boolean = true;
-        if (i < 0 || i >= this.getNoComponents()) condition = false;
+        let condition: boolean = (i >= 0 && i < this.getNoComponents());
         IllegalArgumentException.assertCondition(condition, `Index ${i} is out of bounds.`);
     }
     
@@ -156,4 +152,18 @@ export abstract class AbstractName implements Name {
         IllegalArgumentException.assertCondition(condition, "Component no properly masked")
     }
     
+    /**
+     * Class Invariance Methods
+     */
+    protected assertValidName() {
+        // Name darf nicht leer sein
+        if (this.getNoComponents() === 0) {
+            throw new InvalidStateException("Name cannot be empty.");
+        }
+        
+        // Delimiter muss konsistent sein
+        if (this.delimiter !== this.getDelimiterCharacter()) {
+            throw new IllegalArgumentException("Delimiter is inconsistent.");
+        }
+    }
 }
