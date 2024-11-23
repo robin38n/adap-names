@@ -1,5 +1,7 @@
 import { Node } from "./Node";
 import { Directory } from "./Directory";
+import { InvalidStateException } from "../common/InvalidStateException";
+import { IllegalArgumentException } from "../common/IllegalArgumentException";
 
 enum FileState {
     OPEN,
@@ -12,17 +14,19 @@ export class File extends Node {
     protected state: FileState = FileState.CLOSED;
 
     constructor(baseName: string, parent: Directory) {
+        IllegalArgumentException.assertIsNotNullOrUndefined(baseName);
+        IllegalArgumentException.assertIsNotNullOrUndefined(parent);
         super(baseName, parent);
     }
 
     public open(): void {
-        this.assertStateCondition(this.doGetFileState() !== FileState.CLOSED, "File must be closed to open");
+        InvalidStateException.assertCondition(this.doGetFileState() !== FileState.CLOSED, "File must be closed to open");
         // do something
         this.state = FileState.OPEN;
     }
 
     public close(): void {
-        this.assertStateCondition(this.doGetFileState() !== FileState.OPEN, "File must be open to close");
+        InvalidStateException.assertCondition(this.doGetFileState() !== FileState.OPEN, "File must be open to close");
         // do something
         this.state = FileState.CLOSED;
     }

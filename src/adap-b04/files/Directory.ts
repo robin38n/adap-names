@@ -8,36 +8,21 @@ export class Directory extends Node {
     protected childNodes: Set<Node> = new Set();
 
     constructor(bn: string, pn: Directory) {
-        Directory.assertIsNotNullOrUndefinedStatic(bn);
-        Directory.assertIsNotNullOrUndefinedStatic(pn);
+        IllegalArgumentException.assertIsNotNullOrUndefined(bn);
+        IllegalArgumentException.assertIsNotNullOrUndefined(pn);
         super(bn, pn);
     }
 
     public add(cn: Node): void {
-        this.assertIsNotNullOrUndefined(cn);
+        IllegalArgumentException.assertIsNotNullOrUndefined(cn);
         this.childNodes.add(cn);
     }
 
     public remove(cn: Node): void {
-        this.assertIsNotNullOrUndefined(cn);
-        if (!this.childNodes.has(cn)) {
-            throw new MethodFailureException("Node to be removed does not exist in childNodes");
-        }
+        IllegalArgumentException.assertIsNotNullOrUndefined(cn);
+        IllegalArgumentException.assertCondition(this.childNodes.has(cn), "Node to be removed does not exist in childNodes");
+        
         this.childNodes.delete(cn); // Yikes! Should have been called remove
     }
 
-    protected assertIsNotNullOrUndefined(other: Object): void {
-        let condition: boolean = !IllegalArgumentException.isNullOrUndefined(other);
-        IllegalArgumentException.assertCondition(condition, "null or undefined argument");        
-    }
-
-    protected assertIsValidState(other: Object): void {
-        let condition: boolean =! InvalidStateException.isNullOrUndefined(other);
-        InvalidStateException.assertCondition(condition, "invalid state for this operation");
-    }
-
-    protected static assertIsNotNullOrUndefinedStatic(other: Object): void {
-        let condition: boolean = !IllegalArgumentException.isNullOrUndefined(other);
-        IllegalArgumentException.assertCondition(condition, "null or undefined argument in constructor");
-    }
 }
