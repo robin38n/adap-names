@@ -20,13 +20,13 @@ export class File extends Node {
     }
 
     public open(): void {
-        InvalidStateException.assertCondition(this.doGetFileState() !== FileState.CLOSED, "File must be closed to open");
+        IllegalArgumentException.assertCondition(this.doGetFileState() !== FileState.CLOSED, "File must be closed to open");
         // do something
         this.state = FileState.OPEN;
     }
 
     public close(): void {
-        InvalidStateException.assertCondition(this.doGetFileState() !== FileState.OPEN, "File must be open to close");
+        IllegalArgumentException.assertCondition(this.doGetFileState() !== FileState.OPEN, "File must be open to close");
         // do something
         this.state = FileState.CLOSED;
     }

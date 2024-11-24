@@ -36,8 +36,6 @@ export class StringArrayName extends AbstractName {
     }
 
     public getNoComponents(): number {
-        this.assertClassInvariants();
-        
         return this.components.length;
     }
 
@@ -93,17 +91,23 @@ export class StringArrayName extends AbstractName {
         this.assertPostcondition(this.components.length == backup.components.length - 1, "remove", backup);
         this.assertClassInvariants();
     }
+
+    public concat(other: Name): void {
+        let backup = { components: [...this.components] };
+        super.concat(other);
     
-    protected assertClassInvariants(): void {
-        // all components valid
-        for (const component of this.components) {
-            this.assertIsValidComponent(component);
-        }
-        // name not empty
-        if (this.getNoComponents() === 0) {
-            throw new InvalidStateException("Name cannot be empty.");
+        const expectedComponents = [...backup.components];    
+        for (let i = 0; i < other.getNoComponents(); i++) {
+            expectedComponents.push(other.getComponent(i));
         }
         
+        // Postcondition prüfen
+        const cond = (
+            this.components.length === expectedComponents.length && // Länge stimmt überein
+            this.components.every((c, index) => c === expectedComponents[index]) // Inhalte stimmen überein
+        );
+
+        this.assertPostcondition(cond, "concat StringArrayName", backup);
     }
 
     protected assertPostcondition(condition: boolean, message: string, backup: { components: string[] }): void {

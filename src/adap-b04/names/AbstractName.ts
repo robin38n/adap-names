@@ -17,7 +17,9 @@ export abstract class AbstractName implements Name {
         const clonedData = structuredClone(this);
         const clone = Object.create(Object.getPrototypeOf(this));
         this.assertClassInvariants();
-        return Object.assign(clone, clonedData);
+        const cloneObj = Object.assign(clone, clonedData)
+        this.assertPostconditionWithoutBackup(this.isEqual(cloneObj), "clone");
+        return cloneObj;
     }
 
     public asString(delimiter: string = this.delimiter): string {
@@ -37,7 +39,7 @@ export abstract class AbstractName implements Name {
             }
             str += (i === 0 ? "" : delimiter) + cleanedComp;
         }
-        this.assertClassInvariants();
+        this.assertPostconditionWithoutBackup("string" === typeof(str) ,"asString");
         return str;
         
     }
@@ -55,18 +57,19 @@ export abstract class AbstractName implements Name {
         for (let i = 1; i < this.getNoComponents(); i++) {
             str += (i === 0 ? "" : delimiter) + this.getComponent(i);
         }
-        this.assertClassInvariants();
+        this.assertPostconditionWithoutBackup("string" === typeof(str) ,"asDataString");
         return str;
     }
 
     public isEqual(other: Name): boolean {
         this.assertIsNotNullOrUndefined(other);
         this.assertClassInvariants();
+        let equal: boolean = false;
         if (this.getHashCode() == other.getHashCode()){
-            return true;
-        } else {
-            return false;
+            equal = true;
         }
+        
+        return equal;
     }
 
     public getHashCode(): number {
@@ -77,7 +80,7 @@ export abstract class AbstractName implements Name {
             hashCode = (hashCode << 5) - hashCode + c;
             hashCode |= 0;
         }
-        this.assertClassInvariants();
+        this.assertPostconditionWithoutBackup("number" === typeof(hashCode) ,"asDataString");
         return hashCode;
     }
 
@@ -169,5 +172,10 @@ export abstract class AbstractName implements Name {
     /**
      * Postcondition
      */
+    protected assertPostconditionWithoutBackup(condition: boolean, message: string): void {
+        if (!condition) {
+            throw new MethodFailureException(`Postcondition failed in Methode: ${message}`);
+        }
+    }
     
 }

@@ -36,7 +36,6 @@ export class StringName extends AbstractName {
     }
 
     public getNoComponents(): number {
-        this.assertClassInvariants();
         return this.noComponents;
     }
 
@@ -52,7 +51,7 @@ export class StringName extends AbstractName {
         this.assertIsValidIndex(i);
         this.assertIsValidComponent(c);
 
-        const backup = {name: this.name, length: this.noComponents}
+        const backup = {name: this.name, length: this.noComponents};
         let components = this.splitToArray();
         components[i] = c;
         this.name = components.join(this.delimiter);
@@ -67,7 +66,7 @@ export class StringName extends AbstractName {
         if (!validIndex) throw new IllegalArgumentException(`Index ${i} is out of bounds.`);
         this.assertIsValidComponent(c);
 
-        const backup = {name: this.name, length: this.noComponents}
+        const backup = {name: this.name, length: this.noComponents};
         let components = this.splitToArray();
         components.splice(i, 0, c);
         this.name = components.join(this.delimiter);
@@ -81,7 +80,7 @@ export class StringName extends AbstractName {
     public append(c: string) {
         this.assertIsValidComponent(c);
 
-        const backup = {name: this.name, length: this.noComponents}
+        const backup = {name: this.name, length: this.noComponents};
         let components = this.splitToArray();
         components.push(c);
         this.name = components.join(this.delimiter);
@@ -95,7 +94,7 @@ export class StringName extends AbstractName {
     public remove(i: number) {
         this.assertIsValidIndex(i);
 
-        const backup = {name: this.name, length: this.noComponents}
+        const backup = {name: this.name, length: this.noComponents};
         let components = this.splitToArray();
         components.splice(i, 1);
         this.name = components.join(this.delimiter);
@@ -104,6 +103,28 @@ export class StringName extends AbstractName {
         this.assertPostcondition(this.noComponents === backup.length - 1, "remove" , backup);
         this.assertClassInvariants();
         
+    }
+
+    public concat(other: Name): void {
+        let backup = {name: this.name, length: this.noComponents};
+        super.concat(other);
+    
+        // Berechnung der erwarteten Komponenten
+        const originalComponents = this.splitToArray().slice(0, backup.length);
+        const otherComponents = [];
+        for (let i = 0; i < other.getNoComponents(); i++) {
+            otherComponents.push(other.getComponent(i));
+        }
+        const expectedComponents = [...originalComponents, ...otherComponents];
+
+        // Postcondition prüfen
+        const actualComponents = this.splitToArray();
+        const cond = (
+            actualComponents.length === expectedComponents.length && // Die Länge muss stimmen
+            actualComponents.every((c, index) => c === expectedComponents[index]) // Inhalte müssen übereinstimmen
+        );
+
+        this.assertPostcondition(cond, "concat StringName", backup);
     }
 
     private splitToArray(): string[] {
@@ -130,20 +151,6 @@ export class StringName extends AbstractName {
 
         components.push(currentComponent);
         return components;
-    }
-
-    protected assertClassInvariants() {
-        // noComponents must match the number of components in name
-        const actualComponents = this.splitToArray().length;
-        if (this.noComponents !== actualComponents) {
-            throw new InvalidStateException(
-                `noComponents (${this.noComponents}) dont match actual number of components (${actualComponents}).`
-            );
-        }
-        // name not empty
-        if (this.getNoComponents() === 0) {
-            throw new InvalidStateException("Name cannot be empty.");
-        }
     }
 
     protected assertPostcondition(condition: boolean, message: string, backup: { name: string, length: number }): void {
