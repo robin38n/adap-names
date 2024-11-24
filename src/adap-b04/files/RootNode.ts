@@ -22,6 +22,7 @@ export class RootNode extends Directory {
 
     public move(to: Directory): void {
         IllegalArgumentException.assertIsNotNullOrUndefined(to);
+        IllegalArgumentException.assertCondition(this.parentNode !== to, "Cannot move node to the same directory.");
         // null operation
     }
 

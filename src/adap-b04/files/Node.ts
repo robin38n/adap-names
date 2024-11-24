@@ -1,8 +1,7 @@
 import { Name } from "../names/Name";
 import { Directory } from "./Directory";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
-import { MethodFailureException } from "../common/MethodFailureException";
-import { InvalidStateException } from "../common/InvalidStateException";
+
 
 export class Node {
 
@@ -14,6 +13,8 @@ export class Node {
         IllegalArgumentException.assertIsNotNullOrUndefined(bn);
         IllegalArgumentException.assertIsNotNullOrUndefined(pn);
         IllegalArgumentException.assertCondition(bn.trim().length > 0, "Base name cannot be empty.");
+        IllegalArgumentException.assertCondition(!bn.includes("/"), "Base name cannot contain '/'.");
+
         
         this.doSetBaseName(bn);
         this.parentNode = pn;
@@ -21,6 +22,7 @@ export class Node {
 
     public move(to: Directory): void {
         IllegalArgumentException.assertIsNotNullOrUndefined(to);
+        IllegalArgumentException.assertCondition(this.parentNode !== to, "Cannot move node to the same directory.");
         this.parentNode.remove(this);
         to.add(this);
     }
@@ -42,6 +44,7 @@ export class Node {
     public rename(bn: string): void {
         IllegalArgumentException.assertIsNotNullOrUndefined(bn);
         IllegalArgumentException.assertCondition(bn.trim().length > 0, "Base name cannot be empty.");
+        IllegalArgumentException.assertCondition(!bn.includes("/"), "Base name cannot contain '/'.");
         this.doSetBaseName(bn);
     }
 

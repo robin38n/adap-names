@@ -16,6 +16,9 @@ export class File extends Node {
     constructor(baseName: string, parent: Directory) {
         IllegalArgumentException.assertIsNotNullOrUndefined(baseName);
         IllegalArgumentException.assertIsNotNullOrUndefined(parent);
+        IllegalArgumentException.assertCondition(baseName.trim().length > 0, "Base name cannot be empty.");
+        IllegalArgumentException.assertCondition(!baseName.includes("/"), "Base name cannot contain '/'.");
+
         super(baseName, parent);
     }
 

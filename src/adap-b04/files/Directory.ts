@@ -1,7 +1,5 @@
 import { Node } from "./Node";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
-import { MethodFailureException } from "../common/MethodFailureException";
-import { InvalidStateException } from "../common/InvalidStateException";
 
 export class Directory extends Node {
 
@@ -10,11 +8,15 @@ export class Directory extends Node {
     constructor(bn: string, pn: Directory) {
         IllegalArgumentException.assertIsNotNullOrUndefined(bn);
         IllegalArgumentException.assertIsNotNullOrUndefined(pn);
+        IllegalArgumentException.assertCondition(bn.trim().length > 0, "Base name cannot be empty.");
+        IllegalArgumentException.assertCondition(!bn.includes("/"), "Base name cannot contain '/'.");
+
         super(bn, pn);
     }
 
     public add(cn: Node): void {
         IllegalArgumentException.assertIsNotNullOrUndefined(cn);
+        // Keine Überprüfung, ob bereits vorhanden, da childNodes: Set<Node> keine Duplikate erlaubt
         this.childNodes.add(cn);
     }
 
