@@ -2,7 +2,6 @@ import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
 import { AbstractName } from "./AbstractName";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
-import { InvalidStateException } from "../common/InvalidStateException";
 import { MethodFailureException } from "../common/MethodFailureException";
 
 export class StringArrayName extends AbstractName {
@@ -10,10 +9,13 @@ export class StringArrayName extends AbstractName {
     protected components: string[] = [];
 
     constructor(other: string[], delimiter?: string) {
-        if (other === undefined || other === null || other.length === 0) {
-            throw new IllegalArgumentException("Empty Array not allowed.");
-        }
         super(delimiter);
+        this.assertIsNotNullOrUndefined(other);
+        IllegalArgumentException.assertCondition(other.length != 0, "Empty Name not allowed");
+        for (let i = 0; i < other.length; i++) {
+            this.assertIsValidComponent(other[i]);
+        }
+        
         // assert all components in other properly masked
         for (let i = 0; i < other.length; i++) {
             const c = other[i];
@@ -51,49 +53,52 @@ export class StringArrayName extends AbstractName {
     public setComponent(i: number, c: string) {
         this.assertIsValidIndex(i);
         this.assertIsValidComponent(c);
+        this.assertClassInvariants();
         const backup ={ components: [...this.components] };
 
         this.components[i] = c;
         
         this.assertPostcondition(this.components[i] === c, "setComponent", backup);
-        this.assertClassInvariants();
     }
 
     public insert(i: number, c: string) {
         const validIndex = (i >= 0 && i <= this.components.length);
-        if (!validIndex) throw new IllegalArgumentException(`Index ${i} is out of bounds.`);
+        IllegalArgumentException.assertCondition(validIndex, `Index ${i} is out of bounds.`);
         this.assertIsValidComponent(c);
+        this.assertClassInvariants();
 
         const backup ={ components: [...this.components] };
 
         this.components.splice(i, 0, c);
         
         this.assertPostcondition(this.components[i] === c && this.getNoComponents() == backup.components.length + 1, "insert", backup);
-        this.assertClassInvariants();
     }
 
     public append(c: string) {
         this.assertIsValidComponent(c);
+        this.assertClassInvariants();
         const backup ={ components: [...this.components] };
 
         this.components.push(c);
         
         this.assertPostcondition(this.components[this.components.length - 1] === c && this.components.length == backup.components.length + 1, "append", backup);
-        this.assertClassInvariants();
     }
 
     public remove(i: number) {
         this.assertIsValidIndex(i);
+        this.assertClassInvariants();
         const backup ={ components: [...this.components] };
 
         this.components.splice(i, 1);
 
         this.assertPostcondition(this.components.length == backup.components.length - 1, "remove", backup);
-        this.assertClassInvariants();
+        
     }
 
     public concat(other: Name): void {
+        this.assertClassInvariants();
         let backup = { components: [...this.components] };
+        let expectedLength = this.getNoComponents() + other.getNoComponents();
         super.concat(other);
     
         const expectedComponents = [...backup.components];    
@@ -103,8 +108,8 @@ export class StringArrayName extends AbstractName {
         
         // Postcondition prüfen
         const cond = (
-            this.components.length === expectedComponents.length && // Länge stimmt überein
-            this.components.every((c, index) => c === expectedComponents[index]) // Inhalte stimmen überein
+            this.components.length === expectedLength &&
+            this.components.every((c, index) => c === expectedComponents[index])
         );
 
         this.assertPostcondition(cond, "concat StringArrayName", backup);
@@ -113,9 +118,9 @@ export class StringArrayName extends AbstractName {
     protected assertPostcondition(condition: boolean, message: string, backup: { components: string[] }): void {
         if (!condition) {
             this.components = [...backup.components];
-            this.assertClassInvariants();
             throw new MethodFailureException(`Postcondition failed in Methode: ${message}`);
         }
+        this.assertClassInvariants();
     }
 
 }

@@ -10,6 +10,7 @@ export abstract class AbstractName implements Name {
     protected delimiter: string = DEFAULT_DELIMITER;
 
     constructor(delimiter: string = DEFAULT_DELIMITER) {
+        this.assertIsValidDelChar(delimiter);
         this.delimiter = delimiter;
     }
 
@@ -45,7 +46,9 @@ export abstract class AbstractName implements Name {
     }
 
     public toString(): string {
-        return this.asDataString();
+        let str = this.asDataString();
+        this.assertPostconditionWithoutBackup("string" === typeof(str) ,"toString");
+        return str;
     }
 
     public asDataString(): string {
@@ -68,11 +71,12 @@ export abstract class AbstractName implements Name {
         if (this.getHashCode() == other.getHashCode()){
             equal = true;
         }
-        
+        this.assertPostconditionWithoutBackup("boolean" === typeof(equal) ,"isEqual");
         return equal;
     }
 
     public getHashCode(): number {
+        this.assertClassInvariants();
         let hashCode: number = 0;
         const s: string = this.asDataString();
         for (let i = 0; i < s.length; i++) {
@@ -106,11 +110,12 @@ export abstract class AbstractName implements Name {
     public concat(other: Name): void {
         this.assertIsNotNullOrUndefined(other);
         this.assertMatchingDelChars(other, this.getDelimiterCharacter());
+        this.assertClassInvariants();
 
         for (let i = 0; i < other.getNoComponents(); i++) {
             this.append(other.getComponent(i));
         }
-        this.assertClassInvariants();
+        
     }
 
     /**
@@ -143,15 +148,16 @@ export abstract class AbstractName implements Name {
      *  -> even number  or zero -> false
      */
     protected assertIsValidComponent(c: string) {
+        this.assertIsNotNullOrUndefined(c);
         let isEscaped = false;
-        for (let j = 0; j < c.length; j++) {
-            if (c[j] === ESCAPE_CHARACTER) {
+        for (let i = 0; i < c.length; i++) {
+            if (c[i] === ESCAPE_CHARACTER) {
                 isEscaped = !isEscaped;
             } else {
-                if (c[j] === this.delimiter) {
+                if (c[i] === this.delimiter) {
                     // Der Delimiter ist nur gültig, wenn isEscaped true ist
                     if (!isEscaped) {
-                        throw new IllegalArgumentException(`Component ${j} not properly masked`);
+                        throw new IllegalArgumentException(`Component not properly masked`);
                     }
                 }
                 isEscaped = false; // Reset für den nächsten Charakter
@@ -167,15 +173,14 @@ export abstract class AbstractName implements Name {
         if (this.getNoComponents() === 0) {
             throw new InvalidStateException("Name cannot be empty.");
         }
+        this.assertIsValidDelChar(this.delimiter);
     }
 
     /**
      * Postcondition
      */
     protected assertPostconditionWithoutBackup(condition: boolean, message: string): void {
-        if (!condition) {
-            throw new MethodFailureException(`Postcondition failed in Methode: ${message}`);
-        }
+        if (!condition) throw new MethodFailureException(`Postcondition failed in Methode: ${message}`);
     }
     
 }
