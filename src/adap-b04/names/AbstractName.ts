@@ -15,9 +15,9 @@ export abstract class AbstractName implements Name {
     }
 
     public clone(): Name {
+        this.assertClassInvariants();
         const clonedData = structuredClone(this);
         const clone = Object.create(Object.getPrototypeOf(this));
-        this.assertClassInvariants();
         const cloneObj = Object.assign(clone, clonedData)
         this.assertPostconditionWithoutBackup(this.isEqual(cloneObj), "clone");
         return cloneObj;
@@ -25,6 +25,7 @@ export abstract class AbstractName implements Name {
 
     public asString(delimiter: string = this.delimiter): string {
         this.assertIsValidDelChar(delimiter);
+        this.assertClassInvariants();
 
         if (this.isEmpty()){
             return "";
@@ -46,12 +47,14 @@ export abstract class AbstractName implements Name {
     }
 
     public toString(): string {
+        this.assertClassInvariants();
         let str = this.asDataString();
         this.assertPostconditionWithoutBackup("string" === typeof(str) ,"toString");
         return str;
     }
 
     public asDataString(): string {
+        this.assertClassInvariants();
         if (this.isEmpty()){
             return "";
         } 
