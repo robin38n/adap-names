@@ -2,6 +2,7 @@ import { Node } from "./Node";
 import { Directory } from "./Directory";
 import { InvalidStateException } from "../common/InvalidStateException";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
+import { MethodFailedException } from "../common/MethodFailedException";
 
 enum FileState {
     OPEN,
@@ -26,6 +27,13 @@ export class File extends Node {
         IllegalArgumentException.assertCondition(this.doGetFileState() !== FileState.CLOSED, "File must be closed to open");
         // do something
         this.state = FileState.OPEN;
+    }
+
+
+
+    public read(noBytes: number): Int8Array {
+        // read something
+        return new Int8Array();
     }
 
     public close(): void {
