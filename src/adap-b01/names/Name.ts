@@ -54,7 +54,7 @@ export class Name {
      * Users can vary the delimiter character to be used
      */
     public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation");
+        throw new Error("needs implementation or deletion");
     }
 
     /** 
@@ -63,7 +63,7 @@ export class Name {
      * The control characters in the data string are the default characters
      */
     public asDataString(): string {
-        throw new Error("needs implementation");
+        throw new Error("needs implementation or deletion");
     }
 
     // @method-type Get Method
