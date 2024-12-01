@@ -1,6 +1,7 @@
 import { Node } from "./Node";
 import { Directory } from "./Directory";
 import { MethodFailedException } from "../common/MethodFailedException";
+import { IllegalArgumentException } from "../common/IllegalArgumentException";
 
 enum FileState {
     OPEN,
@@ -13,14 +14,21 @@ export class File extends Node {
     protected state: FileState = FileState.CLOSED;
 
     constructor(baseName: string, parent: Directory) {
+        IllegalArgumentException.assertIsNotNullOrUndefined(baseName);
+        IllegalArgumentException.assertIsNotNullOrUndefined(parent);
+        IllegalArgumentException.assertCondition(baseName.trim().length > 0, "Base name cannot be empty.");
+        IllegalArgumentException.assertCondition(!baseName.includes("/"), "Base name cannot contain '/'.");
+        
         super(baseName, parent);
     }
 
     public open(): void {
+        IllegalArgumentException.assertCondition(this.doGetFileState() !== FileState.CLOSED, "File must be closed to open");
         // do something
     }
 
     public read(noBytes: number): Int8Array {
+        IllegalArgumentException.assertCondition(noBytes >= 0, "noBytes must be positive Integer");
         let result: Int8Array = new Int8Array(noBytes);
         // do something
 
@@ -44,6 +52,7 @@ export class File extends Node {
     }
 
     public close(): void {
+        IllegalArgumentException.assertCondition(this.doGetFileState() !== FileState.OPEN, "File must be open to close");
         // do something
     }
 

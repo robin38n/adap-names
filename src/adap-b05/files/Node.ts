@@ -1,7 +1,7 @@
-import { type } from "os";
 import { ExceptionType, AssertionDispatcher } from "../common/AssertionDispatcher";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 import { InvalidStateException } from "../common/InvalidStateException";
+import { ServiceFailureException } from "../common/ServiceFailureException";
 
 import { Name } from "../names/Name";
 import { Directory } from "./Directory";
@@ -13,6 +13,10 @@ export class Node {
     protected parentNode: Directory;
 
     constructor(bn: string, pn: Directory) {
+        IllegalArgumentException.assertIsNotNullOrUndefined(bn);
+        this.assertIsValidBaseName(bn, ExceptionType.PRECONDITION);
+        IllegalArgumentException.assertIsNotNullOrUndefined(pn);
+        
         this.doSetBaseName(bn);
         this.parentNode = pn; // why oh why do I have to set this
         this.initialize(pn);
@@ -24,6 +28,8 @@ export class Node {
     }
 
     public move(to: Directory): void {
+        IllegalArgumentException.assertIsNotNullOrUndefined(to);
+        IllegalArgumentException.assertCondition(this.parentNode !== to, "Cannot move node to the same directory.");
         this.parentNode.remove(this);
         to.add(this);
         this.parentNode = to;
@@ -44,6 +50,8 @@ export class Node {
     }
 
     public rename(bn: string): void {
+        IllegalArgumentException.assertIsNotNullOrUndefined(bn);
+        this.assertIsValidBaseName(bn, ExceptionType.PRECONDITION);
         this.doSetBaseName(bn);
     }
 
@@ -62,7 +70,7 @@ export class Node {
     public findNodes(bn: string): Set<Node> {
         let localNodes = new Set<Node>(); 
         let recursiveNodes = new Set<Node>();
-
+    
         if (this.getBaseName() === bn) {
             localNodes.add(this);
         }

@@ -1,8 +1,3 @@
-
-import { Exception } from "../common/Exception";
-import { ServiceFailureException } from "../common/ServiceFailureException";
-import { InvalidStateException } from "../common/InvalidStateException";
-
 import { describe, it, expect } from "vitest";
 
 import { StringName } from "../../../src/adap-b05/names/StringName";
@@ -12,6 +7,10 @@ import { Node } from "../../../src/adap-b05/files/Node";
 import { File } from "../../../src/adap-b05/files/File";
 import { BuggyFile } from "../../../src/adap-b05/files/BuggyFile";
 import { Directory } from "../../../src/adap-b05/files/Directory";
+
+import { Exception } from "../../../src/adap-b05/common/Exception";
+import { InvalidStateException } from "../../../src/adap-b05/common/InvalidStateException";
+import { ServiceFailureException } from "../../../src/adap-b05/common/ServiceFailureException";
 
 
 function createFileSystem(): RootNode {
@@ -59,7 +58,7 @@ function createBuggySetup(): RootNode {
 
   return rn;
 }
-/** 
+
 describe("Buggy setup test", () => {
   it("test finding files", () => {
     let threwException: boolean = false;
@@ -77,4 +76,4 @@ describe("Buggy setup test", () => {
     expect(threwException);
   });
 });
-*/
+
