@@ -2,7 +2,7 @@ import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
 import { AbstractName } from "./AbstractName";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
-import { MethodFailureException } from "../common/MethodFailureException";
+import { MethodFailedException } from "../common/MethodFailedException";
 
 export class StringArrayName extends AbstractName {
 
@@ -118,7 +118,7 @@ export class StringArrayName extends AbstractName {
     protected assertPostcondition(condition: boolean, message: string, backup: { components: string[] }): void {
         if (!condition) {
             this.components = [...backup.components];
-            throw new MethodFailureException(`Postcondition failed in Methode: ${message}`);
+            throw new MethodFailedException(`Postcondition failed in Methode: ${message}`);
         }
         this.assertClassInvariants();
     }

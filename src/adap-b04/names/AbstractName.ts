@@ -1,7 +1,7 @@
 import { DEFAULT_DELIMITER, ESCAPE_CHARACTER } from "../common/Printable";
 import { Name } from "./Name";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
-import { MethodFailureException } from "../common/MethodFailureException";
+import { MethodFailedException } from "../common/MethodFailedException";
 import { InvalidStateException } from "../common/InvalidStateException";
 
 
@@ -183,7 +183,7 @@ export abstract class AbstractName implements Name {
      * Postcondition
      */
     protected assertPostconditionWithoutBackup(condition: boolean, message: string): void {
-        if (!condition) throw new MethodFailureException(`Postcondition failed in Methode: ${message}`);
+        if (!condition) throw new MethodFailedException(`Postcondition failed in Methode: ${message}`);
     }
     
 }

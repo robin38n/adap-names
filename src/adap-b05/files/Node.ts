@@ -1,9 +1,11 @@
+import { type } from "os";
 import { ExceptionType, AssertionDispatcher } from "../common/AssertionDispatcher";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 import { InvalidStateException } from "../common/InvalidStateException";
 
 import { Name } from "../names/Name";
 import { Directory } from "./Directory";
+
 
 export class Node {
 
@@ -58,7 +60,18 @@ export class Node {
      * @param bn basename of node being searched for
      */
     public findNodes(bn: string): Set<Node> {
-        throw new Error("needs implementation or deletion");
+        let localNodes = new Set<Node>(); 
+        let recursiveNodes = new Set<Node>();
+
+        if (this.getBaseName() === bn) {
+            localNodes.add(this);
+        }
+
+        if (this instanceof Directory) { 
+            recursiveNodes = new Set<Node>([...recursiveNodes,...(this as Directory).findNodes(bn)]);
+        }
+
+        return new Set<Node>([...localNodes, ...recursiveNodes]);
     }
 
     protected assertClassInvariants(): void {
@@ -72,3 +85,5 @@ export class Node {
     }
 
 }
+
+
