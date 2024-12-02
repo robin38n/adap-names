@@ -71,7 +71,14 @@ export class Node {
     public findNodes(bn: string): Set<Node> {
         let localNodes = new Set<Node>(); 
         let recursiveNodes = new Set<Node>();
-    
+        
+        if (this.getBaseName().length == 0 && !(this.isRoot())) {
+            throw new ServiceFailureException(
+                "node basename cannot be empty, service terminated",
+                 new InvalidStateException("buggy file")
+                );
+        }
+
         if (this.getBaseName() === bn) {
             localNodes.add(this);
         }
