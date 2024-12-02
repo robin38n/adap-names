@@ -34,7 +34,7 @@ export class Directory extends Node {
         
         for (const n of this.childNodes) {
             const base = n.getBaseName();
-            if (base.length == 0 && !(n instanceof RootNode)) {
+            if (base.length == 0 && !(n.isRoot())) {
                 throw new ServiceFailureException(
                     "node basename cannot be empty, service terminated",
                      new InvalidStateException("buggy file")
@@ -44,13 +44,21 @@ export class Directory extends Node {
                 localNodes.add(n);
             }
 
-            if (n instanceof Directory) { 
+            if (n.isDirectory()) { 
                 recursiveNodes = new Set<Node>([...recursiveNodes, ...(n as Directory).findNodes(bn)]);
             }
 
         }
 
         return new Set<Node>([...localNodes, ...recursiveNodes]);
+    }
+
+    public isDirectory(): boolean {
+        return true;
+    }
+
+    public isRoot(): boolean {
+        return false;
     }
 
 }

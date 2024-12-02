@@ -5,6 +5,7 @@ import { ServiceFailureException } from "../common/ServiceFailureException";
 
 import { Name } from "../names/Name";
 import { Directory } from "./Directory";
+import { RootNode } from "./RootNode";
 
 
 export class Node {
@@ -75,11 +76,19 @@ export class Node {
             localNodes.add(this);
         }
 
-        if (this instanceof Directory) { 
-            recursiveNodes = new Set<Node>([...recursiveNodes,...(this as Directory).findNodes(bn)]);
+        if (this.isDirectory()) { 
+            recursiveNodes = new Set<Node>([...recursiveNodes,...this.findNodes(bn)]);
         }
 
         return new Set<Node>([...localNodes, ...recursiveNodes]);
+    }
+
+    public isDirectory(): boolean {
+        return false;
+    }
+
+    public isRoot(): boolean {
+        return false;
     }
 
     protected assertClassInvariants(): void {

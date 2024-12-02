@@ -31,6 +31,10 @@ export class RootNode extends Directory {
         // null operation
     }
 
+    public isRoot(): boolean {
+        return true;
+    }
+
     protected doSetBaseName(bn: string): void {
         // null operation
     }
