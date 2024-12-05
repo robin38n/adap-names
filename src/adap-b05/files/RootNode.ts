@@ -39,9 +39,4 @@ export class RootNode extends Directory {
         // null operation
     }
 
-    protected assertIsValidBaseName(bn: string, et: ExceptionType): void {
-        const condition: boolean = (bn == ""); // Root must have "" as base name
-        AssertionDispatcher.dispatch(et, condition, "invalid base name");
-    }
-
 }

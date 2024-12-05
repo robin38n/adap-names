@@ -1,4 +1,3 @@
-import { ExceptionType, AssertionDispatcher } from "../common/AssertionDispatcher";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 import { InvalidStateException } from "../common/InvalidStateException";
 import { ServiceFailureException } from "../common/ServiceFailureException";
@@ -25,7 +24,7 @@ export class Node {
 
     protected initialize(pn: Directory): void {
         this.parentNode = pn;
-        this.parentNode.add(this);
+        this.parentNode.addChildNode(this);
     }
 
     public move(to: Directory): void {
