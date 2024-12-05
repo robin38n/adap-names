@@ -13,9 +13,7 @@ export class Node {
     protected parentNode: Directory;
 
     constructor(bn: string, pn: Directory) {
-        IllegalArgumentException.assertIsNotNullOrUndefined(bn);
-        this.assertIsValidBaseName(bn, ExceptionType.PRECONDITION);
-        IllegalArgumentException.assertIsNotNullOrUndefined(pn);
+        
         
         this.doSetBaseName(bn);
         this.parentNode = pn; // why oh why do I have to set this
@@ -28,10 +26,9 @@ export class Node {
     }
 
     public move(to: Directory): void {
-        IllegalArgumentException.assertIsNotNullOrUndefined(to);
-        IllegalArgumentException.assertCondition(this.parentNode !== to, "Cannot move node to the same directory.");
-        this.parentNode.remove(this);
-        to.add(this);
+        
+        this.parentNode.removeChildNode(this);
+        to.addChildNode(this);
         this.parentNode = to;
     }
 
@@ -50,8 +47,7 @@ export class Node {
     }
 
     public rename(bn: string): void {
-        IllegalArgumentException.assertIsNotNullOrUndefined(bn);
-        this.assertIsValidBaseName(bn, ExceptionType.PRECONDITION);
+        
         this.doSetBaseName(bn);
     }
 
@@ -96,7 +92,7 @@ export class Node {
     public isRoot(): boolean {
         return false;
     }
-
+    /** 
     protected assertClassInvariants(): void {
         const bn: string = this.doGetBaseName();
         this.assertIsValidBaseName(bn, ExceptionType.CLASS_INVARIANT);
@@ -106,7 +102,7 @@ export class Node {
         const condition: boolean = (bn != "");
         AssertionDispatcher.dispatch(et, condition, "invalid base name");
     }
-
+    */
 }
 
 
