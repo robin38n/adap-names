@@ -11,7 +11,7 @@ export class StringArrayName extends AbstractName {
     constructor(other: string[], delimiter?: string) {
         super(delimiter);
         this.assertIsNotNullOrUndefined(other);
-        IllegalArgumentException.assertCondition(other.length != 0, "Empty Name not allowed");
+        IllegalArgumentException.assert(other.length != 0, "Empty Name not allowed");
         for (let i = 0; i < other.length; i++) {
             this.assertIsValidComponent(other[i]);
         }
@@ -63,7 +63,7 @@ export class StringArrayName extends AbstractName {
 
     public insert(i: number, c: string) {
         const validIndex = (i >= 0 && i <= this.components.length);
-        IllegalArgumentException.assertCondition(validIndex, `Index ${i} is out of bounds.`);
+        IllegalArgumentException.assert(validIndex, `Index ${i} is out of bounds.`);
         this.assertIsValidComponent(c);
         this.assertClassInvariants();
 

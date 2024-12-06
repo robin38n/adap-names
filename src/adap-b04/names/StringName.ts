@@ -12,7 +12,7 @@ export class StringName extends AbstractName {
     constructor(other: string, delimiter?: string) {
         super(delimiter);
         this.assertIsNotNullOrUndefined(other);
-        IllegalArgumentException.assertCondition(other.length != 0, "Empty Name not allowed");
+        IllegalArgumentException.assert(other.length != 0, "Empty Name not allowed");
         this.name = other;
 
         // Calculate noComponents
@@ -61,7 +61,7 @@ export class StringName extends AbstractName {
 
     public insert(i: number, c: string) {
         const validIndex = (i >= 0 && i <= this.noComponents);
-        IllegalArgumentException.assertCondition(validIndex, `Index ${i} is out of bounds.`);
+        IllegalArgumentException.assert(validIndex, `Index ${i} is out of bounds.`);
         this.assertIsValidComponent(c);
         this.assertClassInvariants();
 

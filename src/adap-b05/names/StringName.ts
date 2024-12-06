@@ -60,7 +60,7 @@ export class StringName extends AbstractName {
 
     public insert(i: number, c: string) {
         const validIndex = (i >= 0 && i <= this.noComponents);
-        IllegalArgumentException.assertCondition(validIndex, `Index ${i} is out of bounds.`);
+        IllegalArgumentException.assert(validIndex, `Index ${i} is out of bounds.`);
         this.assertIsValidComponent(c);
         this.assertClassInvariants();
 

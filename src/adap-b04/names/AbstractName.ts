@@ -125,23 +125,23 @@ export abstract class AbstractName implements Name {
      * Precondition assertion Methods
      */    
     protected assertIsNotNullOrUndefined(other: Object): void {
-        let condition: boolean = !IllegalArgumentException.isNullOrUndefined(other);
-        IllegalArgumentException.assertCondition(condition, "null or undefined argument");        
+        let condition: boolean = (other != null);
+        IllegalArgumentException.assert(condition, "null or undefined argument");        
     }
 
     protected assertIsValidDelChar(d: string) {
         let condition: boolean = (d.length == 1);
-        IllegalArgumentException.assertCondition(condition, "invalid delimiter character");
+        IllegalArgumentException.assert(condition, "invalid delimiter character");
     }
 
     protected assertMatchingDelChars(other: Name, delimiter: string) {
         let condition: boolean = (other.getDelimiterCharacter() === delimiter);
-        IllegalArgumentException.assertCondition(condition, "delimiters differ");
+        IllegalArgumentException.assert(condition, "delimiters differ");
     }
 
     protected assertIsValidIndex(i: number) {
         let condition: boolean = (i >= 0 && i < this.getNoComponents());
-        IllegalArgumentException.assertCondition(condition, `Index ${i} is out of bounds.`);
+        IllegalArgumentException.assert(condition, `Index ${i} is out of bounds.`);
     }
     
     /**
