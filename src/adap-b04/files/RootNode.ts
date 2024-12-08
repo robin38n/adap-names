@@ -1,4 +1,6 @@
+
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
+
 import { Name } from "../names/Name";
 import { StringName } from "../names/StringName";
 import { Directory } from "./Directory";
@@ -24,13 +26,16 @@ export class RootNode extends Directory {
     }
 
     public move(to: Directory): void {
-        IllegalArgumentException.assertIsNotNullOrUndefined(to);
-        IllegalArgumentException.assertCondition(this.parentNode !== to, "Cannot move node to the same directory.");
+        
         // null operation
+    }
+
+    public isRoot(): boolean {
+        return true;
     }
 
     protected doSetBaseName(bn: string): void {
         // null operation
     }
-    
+
 }

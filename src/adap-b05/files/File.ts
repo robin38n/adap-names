@@ -14,21 +14,21 @@ export class File extends Node {
     protected state: FileState = FileState.CLOSED;
 
     constructor(baseName: string, parent: Directory) {
-        IllegalArgumentException.assertIsNotNullOrUndefined(baseName);
-        IllegalArgumentException.assertIsNotNullOrUndefined(parent);
-        IllegalArgumentException.assertCondition(baseName.trim().length > 0, "Base name cannot be empty.");
-        IllegalArgumentException.assertCondition(!baseName.includes("/"), "Base name cannot contain '/'.");
+        //IllegalArgumentException.assertIsNotNullOrUndefined(baseName);
+        //IllegalArgumentException.assertIsNotNullOrUndefined(parent);
+        IllegalArgumentException.assert(baseName.trim().length > 0, "Base name cannot be empty.");
+        IllegalArgumentException.assert(!baseName.includes("/"), "Base name cannot contain '/'.");
         
         super(baseName, parent);
     }
 
     public open(): void {
-        IllegalArgumentException.assertCondition(this.doGetFileState() !== FileState.CLOSED, "File must be closed to open");
+        IllegalArgumentException.assert(this.doGetFileState() !== FileState.CLOSED, "File must be closed to open");
         // do something
     }
 
     public read(noBytes: number): Int8Array {
-        IllegalArgumentException.assertCondition(noBytes >= 0, "noBytes must be positive Integer");
+        IllegalArgumentException.assert(noBytes >= 0, "noBytes must be positive Integer");
         let result: Int8Array = new Int8Array(noBytes);
         // do something
 
@@ -52,7 +52,7 @@ export class File extends Node {
     }
 
     public close(): void {
-        IllegalArgumentException.assertCondition(this.doGetFileState() !== FileState.OPEN, "File must be open to close");
+        IllegalArgumentException.assert(this.doGetFileState() !== FileState.OPEN, "File must be open to close");
         // do something
     }
 

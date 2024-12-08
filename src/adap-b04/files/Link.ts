@@ -7,11 +7,10 @@ export class Link extends Node {
     protected targetNode: Node | null = null;
 
     constructor(bn: string, pn: Directory, tn?: Node) {
-        IllegalArgumentException.assertIsNotNullOrUndefined(bn);
-        IllegalArgumentException.assertIsNotNullOrUndefined(pn);
-        IllegalArgumentException.assertCondition(bn.trim().length > 0, "Base name cannot be empty.");
-        IllegalArgumentException.assertCondition(!bn.includes("/"), "Base name cannot contain '/'.");
-
+        //IllegalArgumentException.assertIsNotNullOrUndefined(bn);
+        //IllegalArgumentException.assertIsNotNullOrUndefined(pn);
+        IllegalArgumentException.assert(bn.trim().length > 0, "Base name cannot be empty.");
+        IllegalArgumentException.assert(!bn.includes("/"), "Base name cannot contain '/'.");
         super(bn, pn);
 
         if (tn != undefined) {
@@ -24,7 +23,7 @@ export class Link extends Node {
     }
 
     public setTargetNode(target: Node): void {
-        IllegalArgumentException.assertIsNotNullOrUndefined(target);
+        //IllegalArgumentException.assertIsNotNullOrUndefined(target);
         this.targetNode = target;
     }
 
@@ -34,9 +33,9 @@ export class Link extends Node {
     }
 
     public rename(bn: string): void {
-        IllegalArgumentException.assertIsNotNullOrUndefined(bn);
-        IllegalArgumentException.assertCondition(bn.trim().length > 0, "Base name cannot be empty.");
-        IllegalArgumentException.assertCondition(!bn.includes("/"), "Base name cannot contain '/'.");
+        //IllegalArgumentException.assertIsNotNullOrUndefined(bn);
+        IllegalArgumentException.assert(bn.trim().length > 0, "Base name cannot be empty.");
+        IllegalArgumentException.assert(!bn.includes("/"), "Base name cannot contain '/'.");
         
         const target = this.ensureTargetNode(this.targetNode);
         target.rename(bn);
