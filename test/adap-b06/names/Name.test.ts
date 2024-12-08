@@ -6,7 +6,7 @@ import { StringArrayName } from "../../../src/adap-b06/names/StringArrayName";
 
 describe("concat test", () => {
     it("test equality on StringName and StringArrayName", () => {
-      let sn: Name = new StringArrayName(["oss", "cs", "fau", "de"], ".");
+      let sn: Name = new StringName("oss.cs.fau.de", ".");
       let n = sn.concat(new StringArrayName(["oss", "cs", "fau", "de"], "."));
       expect(n.asDataString()).toBe("oss.cs.fau.de.oss.cs.fau.de")
     });
@@ -26,7 +26,8 @@ describe("mutation test", () => {
   it("append", () => {
     let sn: Name = new StringName("fau.cs", '.');
     let san: Name = new StringArrayName(["fau", "cs"], '.'); 
-    let n = san.append("test");
+    let n = san.remove(1);
+    expect(n.isEqual(new StringArrayName(["fau"], '.'))).toBe(true);
 
   });
 });
@@ -40,6 +41,8 @@ describe("Invalid state", () => {
       let n3 = n2.remove(0);
 
       expect(n3.isEqual(new StringName("as"))).toBe(true);
+      expect(sn.isEqual(san)).toBe(true);
+      
       
     });
 });

@@ -54,7 +54,9 @@ export class StringName extends AbstractName {
         let newName = new StringName(components.join(this.delimiter), this.delimiter); 
 
         this.assertClassInvariants();
-        MethodFailedException.assert(newName.getComponent(i) == c, "setComponent failed");
+        MethodFailedException.assert(
+            newName.getComponent(i) == c, 
+            "setComponent failed");
         return newName;
 
     }
@@ -68,7 +70,10 @@ export class StringName extends AbstractName {
         let newName = new StringName(components.join(this.delimiter), this.delimiter); 
 
         this.assertClassInvariants();
-        MethodFailedException.assert(newName.getNoComponents() == this.getNoComponents() + 1 && newName.getComponent(i) == c, "insert failed");
+        MethodFailedException.assert(
+            newName.getNoComponents() == this.getNoComponents() + 1 
+            && newName.getComponent(i) == c, 
+            "insert failed");
         return newName;
     }
 
@@ -80,7 +85,10 @@ export class StringName extends AbstractName {
         let newName = new StringName(components.join(this.delimiter), this.delimiter); 
 
         this.assertClassInvariants();
-        MethodFailedException.assert(newName.getNoComponents() == this.getNoComponents() + 1 && newName.getComponent(newName.getNoComponents() - 1) == c, "append failed");
+        MethodFailedException.assert(
+            newName.getNoComponents() == this.getNoComponents() + 1 
+            && newName.getComponent(newName.getNoComponents() - 1) == c, 
+            "append failed");
         return newName;
     }
 
@@ -93,7 +101,9 @@ export class StringName extends AbstractName {
 
         this.assertClassInvariants();
         (newName as StringName).assertClassInvariants();
-        MethodFailedException.assert(newName.getNoComponents() == this.getNoComponents() - 1, "remove failed");
+        MethodFailedException.assert(
+            newName.getNoComponents() == this.getNoComponents() - 1, 
+            "remove failed");
 
         return newName;       
     }
@@ -109,7 +119,9 @@ export class StringName extends AbstractName {
         let newName = new StringName(components.join(this.delimiter), this.getDelimiterCharacter());
 
         this.assertClassInvariants();
-        MethodFailedException.assert(newName.getNoComponents() == this.getNoComponents() + other.getNoComponents(), "concat failed");
+        MethodFailedException.assert(
+            newName.getNoComponents() == this.getNoComponents() + other.getNoComponents(), 
+            "concat failed");
         return newName;
     }
 

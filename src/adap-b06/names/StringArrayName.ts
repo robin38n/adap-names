@@ -38,7 +38,9 @@ export class StringArrayName extends AbstractName {
         
         //class inv for newName
         this.assertClassInvariants();
-        MethodFailedException.assert(newName.getComponent(i) == c, "setComponent failed");
+        MethodFailedException.assert(
+            newName.getComponent(i) == c, 
+            "setComponent failed");
 
         return newName;
     }
@@ -53,7 +55,10 @@ export class StringArrayName extends AbstractName {
         
         //class invariants for newName checked in constructor
         this.assertClassInvariants();
-        MethodFailedException.assert(newName.getComponent(i) == c && newName.getNoComponents() == this.getNoComponents() + 1, "insert failed");
+        MethodFailedException.assert(
+            newName.getComponent(i) == c && 
+            newName.getNoComponents() == this.getNoComponents() + 1, 
+            "insert failed");
         
         return newName;
     }
@@ -67,7 +72,10 @@ export class StringArrayName extends AbstractName {
         
         //class invariants for newName checked in constructor
         this.assertClassInvariants();
-        MethodFailedException.assert(newName.getComponent(newName.getNoComponents() - 1) == c && newName.getNoComponents() == this.getNoComponents() + 1, "append failed");
+        MethodFailedException.assert(
+            newName.getComponent(newName.getNoComponents() - 1) == c && 
+            newName.getNoComponents() == this.getNoComponents() + 1, 
+            "append failed");
         
         return newName;
     }
@@ -81,7 +89,9 @@ export class StringArrayName extends AbstractName {
         
         //class invariants for newName checked in constructor
         this.assertClassInvariants();
-        MethodFailedException.assert(newName.getNoComponents() == this.getNoComponents() - 1, "remove failed");
+        MethodFailedException.assert(
+            newName.getNoComponents() == this.getNoComponents() - 1, 
+            "remove failed");
 
         return newName;
     }
@@ -98,7 +108,9 @@ export class StringArrayName extends AbstractName {
         
         //class invariants for newName checked in constructor
         this.assertClassInvariants();
-        MethodFailedException.assert(newName.getNoComponents() == this.getNoComponents() + other.getNoComponents(), "concat failed");
+        MethodFailedException.assert(
+            newName.getNoComponents() == this.getNoComponents() + other.getNoComponents(), 
+            "concat failed");
 
         return newName;
     }
