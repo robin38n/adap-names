@@ -5,7 +5,7 @@ import { MethodFailedException } from "../common/MethodFailedException";
 
 export class StringArrayName extends AbstractName {
 
-    protected components: string[] = [];
+    protected readonly components: ReadonlyArray<string>;
 
     constructor(source: string[], delimiter?: string) {
         super(delimiter);

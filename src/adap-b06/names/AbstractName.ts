@@ -7,7 +7,7 @@ import { InvalidStateException } from "../common/InvalidStateException";
 
 export abstract class AbstractName implements Name {
 
-    protected delimiter: string = DEFAULT_DELIMITER;
+    protected readonly delimiter: string = DEFAULT_DELIMITER;
 
     constructor(delimiter: string = DEFAULT_DELIMITER) {
         this.assertIsValidDelChar(delimiter);

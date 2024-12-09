@@ -24,10 +24,12 @@ describe("Equality test", () => {
 
 describe("mutation test", () => {
   it("append", () => {
-    let sn: Name = new StringName("fau.cs", '.');
-    let san: Name = new StringArrayName(["fau", "cs"], '.'); 
-    let n = san.remove(1);
-    expect(n.isEqual(new StringArrayName(["fau"], '.'))).toBe(true);
+    let sn: Name = new StringName("fau.cs.as.de", '.');
+    let san: Name = new StringArrayName(["fau", "cs", "as", "de"], '.'); 
+    let n = sn.remove(1);
+    expect(n.isEqual(new StringArrayName(["fau", "as", "de"], '.'))).toBe(true);
+    expect(n.getNoComponents()).toBe(3);
+    
 
   });
 });

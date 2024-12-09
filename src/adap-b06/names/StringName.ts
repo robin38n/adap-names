@@ -6,8 +6,8 @@ import { MethodFailedException } from "../common/MethodFailedException";
 
 export class StringName extends AbstractName {
 
-    protected name: string = "";
-    protected noComponents: number = 0;
+    protected readonly name: string = "";
+    protected readonly noComponents: number = 0;
 
     constructor(other: string, delimiter?: string) {
         super(delimiter);
